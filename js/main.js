@@ -2,7 +2,7 @@
 'use strict';
 
 require.config({
-    baseUrl: 'assets/javascripts',
+    baseUrl: 'js',
 	shim: {
 		underscore: {
 			exports: '_'
@@ -20,11 +20,11 @@ require.config({
 		}
 	},
 	paths: {
-		jquery: '../vendor/jquery/dist/jquery',
-		underscore: '../vendor/underscore/underscore',
-		backbone: '../vendor/backbone/backbone',
-		backboneLocalstorage: '../vendor/backbone.localstorage/backbone.localStorage',
-		text: '../vendor/requirejs-text/text'
+		jquery: '../node_modules/jquery/dist/jquery',
+		underscore: '../node_modules/underscore/underscore',
+		backbone: '../node_modules/backbone/backbone',
+		backboneLocalstorage: '../node_modules/backbone.localstorage/backbone.localStorage',
+		text: '../node_modules/requirejs-text/text'
 	}
 });
 
