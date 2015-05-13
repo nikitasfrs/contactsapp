@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,15 +8,19 @@
     <link href="/contactsapp/css/style.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Contact Manager</h1>
-    <nav>
-        <ul>
-            <li><a href="#">Create new contact</a></li>
-            <li><a href="#">View contacts</a></li>
-        </ul>
-    </nav>
-    <section class="contacts-list">
+    <section id="contacts-app">
+        <h1>Contact Manager</h1>
+        <section id="contacts-form">
+            <h2>Create new contact</h2>
+            <input id="firstName" placeholder="First Name">
+            <input id="lastName" placeholder="Last Name">
+            <input id="phone" placeholder="Phone number">
+            <input id="email" placeholder="Email Address">
+            <button id="saveContact">Add</button>
+        </section>
         <h2>Contacts</h2>
+        <section id="contacts-list">
+        </section>
     </section>
 
     <script src="/contactsapp/node_modules/requirejs/require.js"></script>

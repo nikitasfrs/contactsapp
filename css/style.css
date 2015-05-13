@@ -1,0 +1,5 @@
+#contacts-form > input, 
+#contacts-form > button {
+    display:block;
+    margin-top:1em;
+}

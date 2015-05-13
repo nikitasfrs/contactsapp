@@ -30,10 +30,22 @@ require.config({
 
 require([
     'backbone',
-    'routers/router'
-], function (Backbone, AppRouter) {
+    'routers/router',
+    'views/contactsList'
+], function (Backbone, AppRouter, ContactsListView) {
+    
+    var contactsListView, pubSub; 
 
+    // create main router
     new AppRouter();
-    Backbone.history.start({ pushState: true });
+    Backbone.history.start();
+
+    // create events bus
+    pubSub = _.extend({}, Backbone.Events);
+    
+    contactsListView = new ContactsListView({
+        pubSub: pubSub,
+        el: '#contacts-app'
+    });
 
 });
