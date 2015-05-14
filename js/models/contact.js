@@ -10,6 +10,12 @@ define([
             lastName: "",
             phone: "",
             email: ""
+        },
+        validate: function (attrs, options) {
+            if (!attrs.firstName || !attrs.lastName) {
+                return "First name and Last name fields cannot be empty."
+            }
+
         }
         
         //toJSON: function() {}
