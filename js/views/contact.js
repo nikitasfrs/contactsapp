@@ -40,7 +40,7 @@ define([
 
         saveContact: function (e) {
             var formData = {};
-            this.$el.children('input').each( function (idx, el) {
+            this.$el.find('input').each( function (idx, el) {
                 // trim 'contact-' class prefix
                 var prop = $(el).attr("class").substring(8);
                 formData[prop] = $(el).val();
