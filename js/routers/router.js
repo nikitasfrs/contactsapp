@@ -8,7 +8,7 @@ define([
         routes: {
             "*path" : "defaultRoute"
         },
-
+ 
         defaultRoute: function () {
             $('#contacts-app').show();
         }
