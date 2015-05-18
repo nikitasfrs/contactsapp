@@ -6,13 +6,13 @@ define([
 
     var AppRouter = Backbone.Router.extend({
         routes: {
-            "create" : "createContact"
+            "*path" : "defaultRoute"
         },
 
-        createContact: function () {
-            console.log('contact route callback');
+        defaultRoute: function () {
+            $('#contacts-app').show();
         }
-
+        
     });
 
     return AppRouter;
