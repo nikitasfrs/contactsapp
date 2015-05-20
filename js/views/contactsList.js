@@ -2,28 +2,33 @@ define([
     'jquery',
     'underscore',
     'backbone', 
-    'collections/contacts',
-    'views/contact'
-], function ($, _, Backbone, Contacts, ContactView){
+    'views/contact',
+    'text!templates/contactsContainer.html'
+], function ($,
+             _, 
+             Backbone, 
+             ContactView, 
+             contactsContainerTmp){
     'use strict';
 
     var ContactsListView = Backbone.View.extend({
-
-        template: null,
+        tagName: "div",
+        className: "contacts-container",
+        template: _.template(contactsContainerTmp),
 
         // delegated events
         events: {
-            'click #saveContact': 'createNew' 
+            'click #saveContact': 'createNew'
         },
 
         initialize: function() {
-            this.listenTo(Contacts, 'all', this.render);
-            this.listenTo(Contacts, 'add', this.addNew);
+
+            //this.listenTo(this.collection, 'all', this.render);
+            this.listenTo(this.collection, 'add', this.addNew);
             
             // reset gets triggered in every visit if 
             // localstorage has been previously populated
-            this.listenTo(Contacts, 'reset', this.addAll);
-            this.listenTo(Contacts, 'contacts:duplicate', this.alertDuplicate);
+            this.listenTo(this.collection, 'reset', this.addAll);
 
             this.$contactsList = $('#contacts-list');
             this.$firstName = $('#firstName');
@@ -31,7 +36,7 @@ define([
             this.$phone = $('#phone');
             this.$email = $('#email');
 
-            Contacts.fetch({
+            this.collection.fetch({
                 reset: true,
 
                 success: _.bind(function (col,rep,opt) {
@@ -46,13 +51,14 @@ define([
         },
 
         render: function() {
-
+            this.addAll();
+            // this.$el.html(this.template())...
             return this;
         },
 
         createNew: function(e) {
 
-            Contacts.create({
+            this.collection.create({
                 firstName: this.$firstName.val(),
                 lastName: this.$lastName.val(),
                 phone: this.$phone.val(),
@@ -71,12 +77,8 @@ define([
 
         addAll: function () {
             this.$contactsList.empty();
-            Contacts.sort();
-            Contacts.each(this.addNew, this);
-        },
-
-        alertDuplicate: function() {
-            console.log('Duplicates currently are not accepted.');
+            this.collection.sort();
+            this.collection.each(this.addNew, this);
         }
 
     });

@@ -11,18 +11,10 @@
     {
       "firstName": "Koko",
       "lastName": "asdsad",
-      "phone": "",
+      "phone": 231232323,
       "email": "",
       "order": 2,
       "id": 2
-    },
-    {
-      "firstName": "latest",
-      "lastName": "lataaaffffaaa",
-      "phone": "",
-      "email": "",
-      "order": 3,
-      "id": 3
     }
   ]
 }

@@ -12,7 +12,6 @@ define([
         // arguments
         initialize: function() {
             this.model = Contact;
-            //this.localStorage = new Store('contacts-backbone');
             this.url = "http://127.0.0.1:3000/contacts";
             this.comparator = 'order';
         },
@@ -39,5 +38,5 @@ define([
 
     });
 
-    return new ContactsCollection();
+    return ContactsCollection;
 });

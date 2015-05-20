@@ -31,21 +31,47 @@ require.config({
 require([
     'backbone',
     'routers/router',
-    'views/contactsList'
-], function (Backbone, AppRouter, ContactsListView) {
+    'views/contactsList',
+    'views/contactsResults',
+    'views/contactsApp',
+    'collections/contacts',
+    'collections/contactsresults'
+], function (Backbone, 
+             AppRouter,
+             ContactsListView,
+             ContactsResultsView, 
+             ContactsAppView, 
+             ContactsCollection, 
+             ContactsResultsCollection) {
     
-    var contactsListView, pubSub; 
+    var router, contactsAppView, contactsListView, contactsResultsView, 
+        pubSub, contactsCollection, contactsResultsCollection; 
 
     // create main router
-    new AppRouter();
+    router = new AppRouter();
     Backbone.history.start();
 
     // create events bus
     pubSub = _.extend({}, Backbone.Events);
-    
+
+    contactsCollection = new ContactsCollection(); 
+    contactsResultsCollection = new ContactsResultsCollection();
+
+    /*contactsAppView = new ContactsAppView({
+        el: '#contacts-app',
+        router:router
+    })*/
+
     contactsListView = new ContactsListView({
-        pubSub: pubSub,
-        el: '#contacts-app'
+        el: '#contacts-app',
+        router: router,
+        collection: contactsCollection
+    });
+
+
+    contactsResultsView = new ContactsResultsView({
+        router:router,
+        collection: contactsResultsCollection
     });
 
 });
