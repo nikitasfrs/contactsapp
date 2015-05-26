@@ -1,0 +1,34 @@
+
+@import '../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/variables.scss';
+@import '../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins.scss';
+
+@import '../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/scaffolding.scss';
+//@import '../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/type.scss';
+
+.wrap  {
+    @include container-fixed();
+
+    #contacts-app {
+        @include make-row();
+    }
+    header {
+        @include make-md-column(12);
+    }
+    
+    aside {
+        @include make-md-column(3);
+    }
+    .contacts {
+        @include make-md-column(9);
+    }
+}   
+
+#contacts-pages ul li {
+    list-style-type:none;
+    padding-right:.3em;
+    display:inline;
+}
+
+ul li.active {
+    font-weight:bold;
+}

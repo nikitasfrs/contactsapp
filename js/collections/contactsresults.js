@@ -1,9 +1,9 @@
 define([
     'underscore',
     'backbone',
-    'backboneLocalstorage',
+    //'backboneLocalstorage',
     'models/contact'
-], function(_, Backbone, Store, Contact) {
+], function(_, Backbone, Contact) {
     'use strict';
 
     var ContactsResultsCollection = Backbone.Collection.extend({

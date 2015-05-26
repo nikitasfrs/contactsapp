@@ -5,14 +5,16 @@ define([
 ], function(_, Backbone, Contact) {
     'use strict';
 
-    var ContactsCollection = Backbone.Collection.extend({
+    var ContactsPaginatedCollection = Backbone.Collection.extend({
 
         // TODO: modify to accept callback function
         // arguments
-        initialize: function() {
+        initialize: function(options) {
             this.model = Contact;
             this.url = "http://127.0.0.1:3000/contacts";
             this.comparator = 'order';
+            this.currentPage=0;
+            this.modelsPerPage = 4;
         },
 
         create: function (model, options) {
@@ -34,25 +36,27 @@ define([
 		nextOrder: function () {
 			return this.length ? this.last().get('order') + 1 : 1;
 		},
-
-        fetchPage: function(page) {
+        
+        sync: function(method, model, options) {
             
-            // aimed to use with localStorage or 
-            // REST API mockups like json-server
-            
-            var items=2,
-                url = this.url;
-            this.url = this.url + '?_start='+ page + '&_end=' + (page+items);
-            this.fetch({
-                reset: true
-            });
+            // a hack to emulate pagination for demo
+            // behaviour using json-server's slice API calls
 
-           // TODO either override fetch to make more extendable
-            // or create a paginated collection controller
-            //this.url=url;
+           var items = this.modelsPerPage,
+               start = options.page * items,
+               end = start + items;
+
+           if (_.isNumber(options.page)) {
+               options.page = options.page || 0;
+               options.url = this.url + '?_start='+ parseInt(start) + '&_end=' + parseInt(end);
+               this.currentPage = options.page;
+           } 
+
+           Backbone.sync.apply(this, arguments);
+
         }
 
     });
 
-    return ContactsCollection;
+    return ContactsPaginatedCollection;
 });

@@ -3,7 +3,11 @@ define([
     'backbone',
     'text!templates/contact.html',
     'text!templates/editContact.html'
-], function (_, Backbone, contactTemplate, editContactTemplate) {
+], function (
+    _, 
+    Backbone,
+    contactTemplate,
+    editContactTemplate) {
     
     var ContactView = Backbone.View.extend({
 

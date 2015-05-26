@@ -5,25 +5,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Contact Manager</title>
-    <link href="/contactsapp/css/style.css" rel="stylesheet">
+    <link href="/contactsapp/css/main.css" rel="stylesheet">
 </head>
 <body>
-<section id="contacts-app" style="display:none;">
-        <h1>Contact Manager</h1>
-        <input id="search" placeholder="Name, phone etc.."><button id="searchBtn">Search</button>
-        <a href="#" id="createNewContact">Create new contact</a>
-        <section id="contacts-form">
-            <h2>Create new contact</h2>
-            <input id="firstName" placeholder="First Name">
-            <input id="lastName" placeholder="Last Name">
-            <input id="phone" placeholder="Phone number">
-            <input id="email" placeholder="Email Address">
-            <button id="saveContact">Add</button>
-        </section>
-        <h2>Contacts</h2>
-        <section id="contacts-list">
-        </section>
-    </section>
+    <div class="wrap">
+        <div id="contacts-app" style="display:none;">
+        <header>
+            <h1>Contact Manager</h1>
+            <div class="search-area">
+                <input id="search" placeholder="Name, phone etc.."><button id="searchBtn">Search</button>
+            </div>
+        </header>
+        
+        <aside>
+            <div class="create-area"></div>
+        </aside>
+
+        </div> <!-- / contacts-app -->
+    </div><!-- / wrap -->
 
     <script src="/contactsapp/node_modules/requirejs/require.js"></script>
     <script src="/contactsapp/js/main.js"></script>

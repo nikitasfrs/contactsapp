@@ -1,11 +1,11 @@
 .contact > input,
-#contacts-form > input, 
-#contacts-form > button {
+.contact-create-form > input{
     display:block;
-    margin-top:1em;
+    margin-bottom:1em;
 }
-#contacts-form {
-    display:none;
+
+#clearCreateForm {
+    display:inline;
 }
 
 .contact {
@@ -14,4 +14,23 @@
     padding:1em;
     margin:1em;
     border:1px solid gray;
+}
+#contacts-list {
+    display:block;
+    float:left;
+}
+    
+#contacts-pages { 
+    display:block;
+    clear:both;
+    float:left;
+}
+#contacts-pages ul li {
+    list-style-type:none;
+    padding-right:.3em;
+    display:inline;
+}
+
+ul li.active {
+    font-weight:bold;
 }

@@ -12,47 +12,38 @@ define([
     'use strict';
 
     var ContactsListView = Backbone.View.extend({
-        tagName: "div",
-        className: "contacts-container",
-        template: _.template(contactsContainerTmp),
+        tagName: "section",
+        className: "contacts",
+        template: contactsContainerTmp,
 
-        // delegated events
-        events: {
-            'click #saveContact': 'createNew'
-        },
+        initialize: function(options) {
 
-        initialize: function() {
+            this.router = options.router;
 
-            //this.listenTo(this.collection, 'all', this.render);
+            //this.listenTo(this.router, 'contacts:page', this.getPage);
+            //this.listenTo(this.router, 'contacts:init', this.initCollection);
+
             this.listenTo(this.collection, 'add', this.addNew);
-            
             // reset gets triggered in every visit if 
             // localstorage has been previously populated
             this.listenTo(this.collection, 'reset', this.addAll);
+            this.contactsPageControlView = options.contactsPageControlView;
 
-            this.$contactsList = $('#contacts-list');
-            this.$firstName = $('#firstName');
-            this.$lastName = $('#lastName');
-            this.$phone = $('#phone');
-            this.$email = $('#email');
-
-            this.collection.fetch({
-                reset: true,
-
-                success: _.bind(function (col,rep,opt) {
-                   $(this.el).show();
-                }, this),
-
-                error: function (col, rep, opt) {
-                    console.log('error fetching data');
-                }
-            });
+            this.pageModel = options.pageModel;
 
         },
-
+        
         render: function() {
+
+            this.$el.html(this.template);
+           // this.$('#contacts-pages').html(this.contactsPageControlView.render().el); 
+            this.contactsPageControlView.setElement(
+                this.$('#contacts-pages')).render();
+
+            // cache main selector for later access
+            this.$contactsList = this.$('#contacts-list');
+
             this.addAll();
-            // this.$el.html(this.template())...
             return this;
         },
 
@@ -63,7 +54,7 @@ define([
                 lastName: this.$lastName.val(),
                 phone: this.$phone.val(),
                 email: this.$email.val(),
-                order: Contacts.nextOrder()
+                order: this.collection.nextOrder()
             }, {wait: true});
             
         },
