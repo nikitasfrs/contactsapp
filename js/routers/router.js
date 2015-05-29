@@ -33,11 +33,6 @@ define([
                 model: this.contactPageModel,
                 router: this
             });
-
-            this.contactCreateFormView = new ContactCreateFormView({
-                //router:router,
-                collection: this.contactsPaginatedCollection
-            });
             
             this.contactsListView = new ContactsListView({
                 router: this,
@@ -45,7 +40,12 @@ define([
                 collection: this.contactsPaginatedCollection,
                 pageModel: this.contactPageModel
             });
-    
+
+            this.contactCreateFormView = new ContactCreateFormView({
+                //router:router,
+                collection: this.contactsPaginatedCollection
+            });
+            
             this.contactsAppView = new ContactsAppView({
                 el: '#contacts-app',
                 router:this,
@@ -63,45 +63,14 @@ define([
             "page/:page":"pageController",
             "*path": "defaultRoute"
         },
- 
-        search: function (query) {
-
-        },
 
         pageController:function(pageNum) {
-            this.trigger('contacts:page', pageNum);
-            this.contactsPaginatedCollection.fetch({
-                reset: true,
-                page: parseInt(pageNum),
-
-                success: _.bind(function (col,rep,opt) {
-                    // create page model
-                    // from the first element of the collection
-                }, this),
-
-                error: function (col, rep, opt) {
-                    console.log('error fetching data');
-                }
-            });
-            this.contactPageModel.set('currentPage', parseInt(pageNum));
+            this.contactsListView.setUpPage(pageNum);
             this.contactsAppView.render();
         },
 
         defaultRoute: function () {
-            //this.trigger('contacts:init');
-            this.contactsPaginatedCollection.fetch({
-                reset: true,
-                page: 0,
-
-                success: _.bind(function (col,rep,opt) {
-
-                }, this),
-
-                error: function (col, rep, opt) {
-                    console.log('error fetching data');
-                }
-            });
-            this.contactPageModel.set('currentPage', 0);
+            this.contactsListView.setUpPage(0);
             this.contactsAppView.render();
         }
         

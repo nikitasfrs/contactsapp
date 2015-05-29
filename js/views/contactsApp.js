@@ -20,10 +20,17 @@ define([
            this.contactsListView = options.contactsListView
            this.contactsResultView = options.contactsResultView;
            this.contactCreateFormView = options.contactCreateFormView;
+
+           this.listenTo(this.contactsListView, 'fetch:error', this.listViewError);
        },
 
        events: {
            
+       },
+
+       listViewError: function() {
+           // handle server list error
+           // message behaviour here
        },
 
        render: function() {

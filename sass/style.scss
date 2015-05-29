@@ -3,30 +3,185 @@
 @import '../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins.scss';
 
 @import '../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/scaffolding.scss';
+//@import '../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/theme.scss';
+@import '../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/buttons.scss';
+@import '../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/forms.scss';
+@import '../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/pagination.scss';
 //@import '../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/type.scss';
+
+@mixin make-btn {
+      //default btn style
+      display: inline-block;
+      margin-bottom: 0; // For input.btn
+      font-weight: $btn-font-weight;
+      text-align: center;
+      vertical-align: middle;
+      touch-action: manipulation;
+      cursor: pointer;
+      background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
+      border: 1px solid transparent;
+      white-space: nowrap;
+      @include button-size($padding-base-vertical, $padding-base-horizontal, $font-size-base, $line-height-base, $border-radius-base);
+      @include user-select(none);
+
+      &,
+      &:active,
+      &.active {
+        &:focus,
+        &.focus {
+          @include tab-focus;
+        }
+      }
+
+      &:hover,
+      &:focus,
+      &.focus {
+        color: $btn-default-color;
+        text-decoration: none;
+      }
+
+      &:active,
+      &.active {
+        outline: 0;
+        background-image: none;
+        @include box-shadow(inset 0 3px 5px rgba(0,0,0,.125));
+      }
+
+      &.disabled,
+      &[disabled],
+      fieldset[disabled] & {
+        cursor: $cursor-disabled;
+        pointer-events: none; // Future-proof disabling of clicks
+        @include opacity(.65);
+        @include box-shadow(none);
+      }
+}
+
+@mixin make-default-btn {
+    @include make-btn;
+    @include button-variant($btn-default-color, $btn-default-bg, $btn-default-border);
+}
+
+@mixin make-primary-btn {
+    @include make-btn;
+    @include button-variant($btn-primary-color, $btn-primary-bg, $btn-primary-border);
+}
+
+@mixin make-danger-btn {
+    @include make-btn;
+    @include button-variant($btn-danger-color, $btn-danger-bg, $btn-danger-border);
+}
+
+@mixin form-control() {
+  display: block;
+  width: 100%;
+  height: $input-height-base; // Make inputs at least the height of their button counterpart (base line-height + padding + border)
+  padding: $padding-base-vertical $padding-base-horizontal;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  color: $input-color;
+  background-color: $input-bg;
+  background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
+  border: 1px solid $input-border;
+  border-radius: $input-border-radius; // Note: This has no effect on <select>s in some browsers, due to the limited stylability of <select>s in CSS.
+  @include box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
+  @include transition(border-color ease-in-out .15s, box-shadow ease-in-out .15s);
+}
+
+@mixin form-control-inline() {
+    @include form-control();
+    display:inline;
+    width:auto;
+}
+
+button {
+    @include make-default-btn;
+}
 
 .wrap  {
     @include container-fixed();
+}
 
-    #contacts-app {
-        @include make-row();
+#contacts-app {
+  @include make-row();
+}
+
+.search-area {
+    @include make-md-column(3);
+    input {
+        @include form-control-inline;
     }
-    header {
+    button {
+        @include button-size($padding-small-vertical, $padding-small-horizontal, $font-size-small, $line-height-small, $border-radius-small);
+
+        display:inline;
+    }
+}
+
+header {
+    @include make-row();
+    h1 {
         @include make-md-column(12);
     }
+}
     
-    aside {
-        @include make-md-column(3);
+aside {
+    @include make-md-column(2);
+    input {
+        margin-bottom:1em;
+        @include form-control;
     }
-    .contacts {
-        @include make-md-column(9);
+    .form-controls {
+        display:block;
     }
-}   
+    #saveContact {
+        @include make-primary-btn;
+    }
+    #clearCreateForm {
+        float:right;
+    }
+}
 
-#contacts-pages ul li {
-    list-style-type:none;
-    padding-right:.3em;
-    display:inline;
+.contacts {
+    @include make-md-column(5);
+    position:relative;
+    height:500px;
+    
+    & > .wait, & > .error {
+        width:200px;
+        position: relative;
+        margin-left:-5%;
+        top:20%;
+        left:20%;
+    }
+
+}
+
+
+#contacts-list {
+    @include make-row();
+    @include make-md-column(12);
+}
+
+.contact {
+    @include make-md-column(12);
+    border:1px solid lightgray;
+    border-radius: 4px;
+    padding:1em;
+    margin-bottom:1em;
+    .contact-delete {
+        //@include make-danger-btn;
+    }
+    button {
+        @include button-size($padding-small-vertical, $padding-small-horizontal, $font-size-small, $line-height-small, $border-radius-small);
+    }
+
+}
+
+#contacts-pages {
+    @include make-row();
+    @include make-md-column(12);
+
 }
 
 ul li.active {

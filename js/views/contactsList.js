@@ -3,11 +3,13 @@ define([
     'underscore',
     'backbone', 
     'views/contact',
+    'views/waitView',
     'text!templates/contactsContainer.html'
 ], function ($,
              _, 
              Backbone, 
              ContactView, 
+             WaitView,
              contactsContainerTmp){
     'use strict';
 
@@ -19,44 +21,61 @@ define([
         initialize: function(options) {
 
             this.router = options.router;
-
-            //this.listenTo(this.router, 'contacts:page', this.getPage);
-            //this.listenTo(this.router, 'contacts:init', this.initCollection);
+            this.pageModel = options.pageModel;
+            this.contactsPageControlView = options.contactsPageControlView;
+            this.waitView = new WaitView();
 
             this.listenTo(this.collection, 'add', this.addNew);
-            // reset gets triggered in every visit if 
-            // localstorage has been previously populated
+            this.listenTo(this.collection, 'request', this.onRequest);
+            this.listenTo(this.collection, 'sync', this.onSync);
+            this.listenTo(this.collection, 'error', this.onError);
+
             this.listenTo(this.collection, 'reset', this.addAll);
-            this.contactsPageControlView = options.contactsPageControlView;
+        },
 
-            this.pageModel = options.pageModel;
-
+        events: {
+            'click .pagenum':'goToPage'
         },
         
         render: function() {
 
             this.$el.html(this.template);
-           // this.$('#contacts-pages').html(this.contactsPageControlView.render().el); 
-            this.contactsPageControlView.setElement(
-                this.$('#contacts-pages')).render();
-
+            
             // cache main selector for later access
             this.$contactsList = this.$('#contacts-list');
-
             this.addAll();
             return this;
         },
 
-        createNew: function(e) {
+        onRequest: function() {
+            // show loading
+            this.$el.html(this.waitView.render().el);
+        },
 
-            this.collection.create({
-                firstName: this.$firstName.val(),
-                lastName: this.$lastName.val(),
-                phone: this.$phone.val(),
-                email: this.$email.val(),
-                order: this.collection.nextOrder()
-            }, {wait: true});
-            
+        onSync: function() {
+            // rerender & show list & page controls
+            this.render().contactsPageControlView.setElement(
+                this.$('#contacts-pages')).render();   
+        },
+
+        onError: function() {
+            this.trigger('fetch:error');
+            this.$el.html("<div class='error'><h3>Could not load content</h3><p>Please check your connection status.</p></div>");
+        },
+
+        goToPage: function(e) {
+            var page = e.target.text;
+            e.preventDefault();  
+            this.setUpPage(page)
+            this.router.navigate('page/' + page);
+        },
+
+        setUpPage: function(page) {
+            this.collection.fetch({
+                reset: true,
+                page: parseInt(page)
+            });
+            this.pageModel.set('currentPage', parseInt(page));
         },
 
         addNew: function(contact) {

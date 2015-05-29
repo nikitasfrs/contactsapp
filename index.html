@@ -9,19 +9,22 @@
 </head>
 <body>
     <div class="wrap">
-        <div id="contacts-app" style="display:none;">
         <header>
             <h1>Contact Manager</h1>
             <div class="search-area">
-                <input id="search" placeholder="Name, phone etc.."><button id="searchBtn">Search</button>
+            <input id="search" placeholder="Name, phone etc..">
+            <button id="searchBtn">Search</button>
             </div>
         </header>
-        
-        <aside>
-            <div class="create-area"></div>
-        </aside>
+
+        <div id="contacts-app" style="display:none;">
+
+            <aside>
+                <div class="create-area"></div>
+            </aside>
 
         </div> <!-- / contacts-app -->
+
     </div><!-- / wrap -->
 
     <script src="/contactsapp/node_modules/requirejs/require.js"></script>

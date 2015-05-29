@@ -51,7 +51,6 @@ define([
                options.url = this.url + '?_start='+ parseInt(start) + '&_end=' + parseInt(end);
                this.currentPage = options.page;
            } 
-
            Backbone.sync.apply(this, arguments);
 
         }

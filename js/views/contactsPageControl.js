@@ -21,28 +21,21 @@ define([
             //this.listenTo(this.model,'change', this.render) 
         }, 
 
-        events: {
-            'click .pagenum': 'goToPage'
-        },
-
-        goToPage: function(e) {
-            e.preventDefault();
-            var page = $(e.target).text();
-
-            // update router
-            this.router.navigate('page/' + page, { trigger: true });
-            // update pages ui: make current page num
-            // bold, check if last/first etc
-            // will update pages model as well
-        },
-
         render: function () {
             // will get currentpage from model 
             // and construct controls
             var items = this.generateItems(),
-                tpl = ($(this.template)).append(items);
+                tpl = ($('ul', this.template)).append(items);
             this.$el.html(tpl);
             return this;
+        },
+
+        events: {
+            'click .active': 'doNotFollow' 
+        },
+
+        doNotFollow: function(e) {
+            e.preventDefault();
         },
 
         generateItems: function() {
@@ -53,9 +46,9 @@ define([
 
             for (i=0; i < totalPages; i++) {
                 if (currentPage === i) {
-                    li = '<li class="active"><a href="#" class="pagenum">' + i + '</li></a>';
+                    li = '<li class="active"><a href="#" class="pagenum">' + i + '</a></li>';
                 } else {
-                    li = '<li><a href="#" class="pagenum">' + i + '</li></a>';
+                    li = '<li><a href="#page/' + i + '" class="pagenum">' + i + '</a></li>';
                 }
                 str=str+li;
             }
