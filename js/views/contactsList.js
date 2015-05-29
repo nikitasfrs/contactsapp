@@ -40,7 +40,9 @@ define([
         render: function() {
 
             this.$el.html(this.template);
-            
+            this.contactsPageControlView.setElement(
+            this.$('#contacts-pages')).render();            
+
             // cache main selector for later access
             this.$contactsList = this.$('#contacts-list');
             this.addAll();
@@ -53,9 +55,8 @@ define([
         },
 
         onSync: function() {
-            // rerender & show list & page controls
-            this.render().contactsPageControlView.setElement(
-                this.$('#contacts-pages')).render();   
+            // rerender, show list & page controls
+            this.render();
         },
 
         onError: function() {
