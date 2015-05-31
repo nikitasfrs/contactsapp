@@ -26,8 +26,8 @@ define([
             this.listenTo(this.collection, 'add', this.addNew);
             this.listenTo(this.collection, 'error', this.onError);
             this.listenTo(this.collection, 'reset', this.render);
-            //this.listenTo(this.collection, 'request', this.prerender);
-            this.listenToOnce(this.collection, 'sync', this.onFirstSync);
+            this.listenToOnce(this.collection, 'sync', this.bindWhenReady);
+
         },
 
         events: {
@@ -35,11 +35,16 @@ define([
         },
 
         prerender: function() {
+
+            //TODO prerendered gets called twice each 
+            //initialization
+            //find a way to bind request 
+            console.log('prerender');
             this.$el.html(this.waitView.render().el);
             return this;
         },
 
-        onFirstSync: function () {
+        bindWhenReady: function () {
             this.listenTo(this.collection, 'request', this.prerender);
         },
         
