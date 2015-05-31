@@ -3,7 +3,7 @@ define([
     'underscore',
     'backbone',
     'views/contactsList',
-    'views/contactsResults'
+    'views/contactsResults',
 ], function (
     $,
     _,
@@ -20,24 +20,22 @@ define([
            this.contactsListView = options.contactsListView
            this.contactsResultView = options.contactsResultView;
            this.contactCreateFormView = options.contactCreateFormView;
+           this.$contacts=$('.contacts');
 
-           this.listenTo(this.contactsListView, 'fetch:error', this.listViewError);
        },
 
        events: {
            
        },
 
-       listViewError: function() {
-           // handle server list error
-           // message behaviour here
-       },
-
        render: function() {
-           this.$el.append(this.contactsListView.render().el);
+
+           this.$contacts.html(this.contactsListView.prerender().el);
+
            this.$('.create-area').append(this.contactCreateFormView.render().el);
 
            this.$el.show();
+           return this;
        }
 
 

@@ -1240,11 +1240,11 @@ aside #clearCreateForm {
   }
 }
 .contacts > .wait, .contacts > .error {
-  width: 200px;
+  width: 250px;
   position: relative;
   margin-left: -5%;
   top: 20%;
-  left: 20%;
+  left: 15%;
 }
 
 #contacts-list {

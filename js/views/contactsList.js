@@ -14,8 +14,6 @@ define([
     'use strict';
 
     var ContactsListView = Backbone.View.extend({
-        tagName: "section",
-        className: "contacts",
         template: contactsContainerTmp,
 
         initialize: function(options) {
@@ -26,37 +24,34 @@ define([
             this.waitView = new WaitView();
 
             this.listenTo(this.collection, 'add', this.addNew);
-            this.listenTo(this.collection, 'request', this.onRequest);
-            this.listenTo(this.collection, 'sync', this.onSync);
             this.listenTo(this.collection, 'error', this.onError);
 
-            this.listenTo(this.collection, 'reset', this.addAll);
+            //this.listenTo(this.collection, 'reset', this.addAll);
+            this.listenTo(this.collection, 'reset', this.render);
+            this.listenTo(this.collection, 'request', this.prerender);
+
         },
 
         events: {
+
             'click .pagenum':'goToPage'
+        },
+
+        prerender: function() {
+
+            this.$el.html(this.waitView.render().el);
+            return this;
         },
         
         render: function() {
-
             this.$el.html(this.template);
             this.contactsPageControlView.setElement(
-            this.$('#contacts-pages')).render();            
+                this.$('#contacts-pages')).render();            
 
-            // cache main selector for later access
             this.$contactsList = this.$('#contacts-list');
+
             this.addAll();
             return this;
-        },
-
-        onRequest: function() {
-            // show loading
-            this.$el.html(this.waitView.render().el);
-        },
-
-        onSync: function() {
-            // rerender, show list & page controls
-            this.render();
         },
 
         onError: function() {
@@ -65,6 +60,9 @@ define([
         },
 
         goToPage: function(e) {
+            // we handle this internally to avoid
+            // router reinitialization 
+            
             var page = e.target.text;
             e.preventDefault();  
             this.setUpPage(page)
@@ -81,13 +79,12 @@ define([
 
         addNew: function(contact) {
             // create new contact view 
-            // and apend it to the main view
+            // and append it to the main one
             var view = new ContactView({ model: contact });
             this.$contactsList.prepend(view.render().el);
         },
 
         addAll: function () {
-            this.$contactsList.empty();
             this.collection.sort();
             this.collection.each(this.addNew, this);
         }

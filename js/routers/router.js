@@ -35,6 +35,7 @@ define([
             });
             
             this.contactsListView = new ContactsListView({
+                el: $('.contacts'),
                 router: this,
                 contactsPageControlView: this.contactsPageControlView,
                 collection: this.contactsPaginatedCollection,
@@ -65,13 +66,13 @@ define([
         },
 
         pageController:function(pageNum) {
-            this.contactsListView.setUpPage(pageNum);
             this.contactsAppView.render();
+            this.contactsListView.setUpPage(pageNum);
         },
 
         defaultRoute: function () {
-            this.contactsListView.setUpPage(0);
             this.contactsAppView.render();
+            this.contactsListView.setUpPage(0);
         }
         
     });
