@@ -40,6 +40,7 @@ define([
         },
 
         onFirstSync: function () {
+            // prerender on each col request
             this.listenTo(this.collection, 'request', this.prerender);
         },
         

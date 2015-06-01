@@ -14,7 +14,10 @@ module.exports = function(grunt) {
             dev: {
                 options: {
                     style:'expanded',
-                    compass: false
+                    compass: false,
+                    
+                    // bootstrap requires this
+                    precision: 8,
                 },
                 files: {
                     'css/main.css':'<%= project.scss %>'

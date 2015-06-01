@@ -30,9 +30,9 @@ define([
 
        render: function() {
 
-           //couldn't get this working with $.html() ...
+           //couldn't get this working with :
            //this.$contacts.html(this.contactsListView.prerender().el);
-           this.$('.contacts').append(this.contactsListView.prerender().el);
+           this.$('.contacts').html=(this.contactsListView.prerender().el);
 
            this.$('.create-area').append(this.contactCreateFormView.render().el);
 

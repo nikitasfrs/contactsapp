@@ -44,6 +44,13 @@ define([
                 currentPage = this.model.get('currentPage'),
                 i, str='', li='';
 
+            if (currentPage > 0) {
+                // show prev
+                str = '<li><a href="#page/' + (currentPage-1) + '" aria-label="Previous">' +
+                    '<span aria-hidden="true">&laquo;</span>' +
+                    '</a></li>';
+            }
+
             for (i=0; i < totalPages; i++) {
                 if (currentPage === i) {
                     li = '<li class="active"><a href="#" class="pagenum">' + i + '</a></li>';
@@ -51,6 +58,13 @@ define([
                     li = '<li><a href="#page/' + i + '" class="pagenum">' + i + '</a></li>';
                 }
                 str=str+li;
+            }
+
+            if (currentPage < totalPages-1) {
+               // show next
+               str += '<li><a href="#page/' + (currentPage+1) + '" aria-label="Previous">' +
+                    '<span aria-hidden="true">&raquo;</span>' +
+                    '</a></li>';
             }
 
             return str; 

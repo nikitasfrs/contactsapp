@@ -7,6 +7,8 @@
 @import '../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/buttons.scss';
 @import '../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/forms.scss';
 @import '../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/pagination.scss';
+@import '../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/input-groups.scss';
+
 //@import '../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/type.scss';
 
 @mixin make-btn {
@@ -109,12 +111,11 @@ button {
 .search-area {
     @include make-md-column(3);
     input {
-        @include form-control-inline;
+        //@include form-control-inline;
     }
     button {
-        @include button-size($padding-small-vertical, $padding-small-horizontal, $font-size-small, $line-height-small, $border-radius-small);
-
-        display:inline;
+        //@include make-default-btn;
+        //display:inline;
     }
 }
 
