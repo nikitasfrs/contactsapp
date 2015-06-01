@@ -22,10 +22,12 @@ define([
             this.pageModel = options.pageModel;
             this.contactsPageControlView = options.contactsPageControlView;
             this.waitView = new WaitView();
+            this.views = [];
 
             this.listenTo(this.collection, 'add', this.addNew);
             this.listenTo(this.collection, 'error', this.onError);
             this.listenTo(this.collection, 'reset', this.render);
+            this.listenTo(this.collection, 'remove', this.render);
             //this.listenTo(this.collection, 'request', this.prerender);
             this.listenToOnce(this.collection, 'sync', this.onFirstSync);
         },
@@ -45,13 +47,16 @@ define([
         },
         
         render: function() {
+            console.log('parent render');
             this.$el.html(this.template);
             this.contactsPageControlView.setElement(
                 this.$('#contacts-pages')).render();            
 
             this.$contactsList = this.$('#contacts-list');
 
+            this.removeAll();
             this.addAll();
+
             return this;
         },
 
@@ -81,13 +86,26 @@ define([
         addNew: function(contact) {
             // create new contact view 
             // and append it to the main one
+
             var view = new ContactView({ model: contact });
+
+            // keeping track of children
+            this.views.push(view);
+            this.listenTo(view, 'change', this.render);
+
             this.$contactsList.prepend(view.render().el);
         },
 
         addAll: function () {
+            // close all views before adding
             this.collection.sort();
             this.collection.each(this.addNew, this);
+        },
+
+        removeAll: function () {
+            while (this.views.length > 0) {
+                this.views.pop().remove();
+            }
         }
 
     });

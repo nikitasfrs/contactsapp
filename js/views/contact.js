@@ -28,6 +28,25 @@ define([
             // view will follow model
             this.listenTo(this.model, 'destroy', this.remove);
             this.listenTo(this.model, 'change', this.render);
+
+            this.listenTo(this.model, 'request', this.onRequest);
+            this.listenTo(this.model, 'sync', this.onSync);
+            this.listenTo(this.model, 'error', this.onError);
+        },
+
+        onRequest: function() {
+            // wait--loading view
+        },
+
+        onSync: function () {
+            // notify parent of successful update
+            
+            this.trigger('change');
+        },
+
+        onError: function () {
+            // error view or delegate to parent
+            this.trigger('error');
         },
 
         removeContact: function (e) {
@@ -44,13 +63,15 @@ define([
 
         saveContact: function (e) {
             var formData = {};
+            var onSuccess;
             this.$el.find('input').each( function (idx, el) {
                 // trim 'contact-' class prefix
                 var prop = $(el).attr("class").substring(8);
                 formData[prop] = $(el).val();
             });
             this.model.set(formData);
-            this.model.save();
+
+            this.model.save({wait: true});
         },
             
         render: function () {
