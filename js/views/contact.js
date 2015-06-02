@@ -1,13 +1,11 @@
 define([
     'underscore',
     'backbone',
-    'views/waitView',
     'text!templates/contact.html',
     'text!templates/editContact.html'
 ], function (
     _, 
     Backbone,
-    WaitView,
     contactTemplate,
     editContactTemplate) {
     
@@ -35,7 +33,6 @@ define([
             this.listenTo(this.model, 'sync', this.onSync);
             this.listenTo(this.model, 'error', this.onError);
 
-            this.waitView = new WaitView();
         },
 
         onRequest: function() {

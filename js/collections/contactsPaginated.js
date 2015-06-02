@@ -13,8 +13,10 @@ define([
             this.model = Contact;
             this.url = "http://127.0.0.1:3000/contacts";
             this.comparator = 'order';
+
+            this.contactPageModel = options.contactPageModel;
+
             this.currentPage=0;
-            this.modelsPerPage = 4;
         },
 
         create: function (model, options) {
@@ -42,7 +44,7 @@ define([
             // a hack to emulate pagination for demo
             // behaviour using json-server's slice API calls
 
-           var items = this.modelsPerPage,
+           var items = this.contactPageModel.get('items'),
                start = options.page * items,
                end = start + items;
 

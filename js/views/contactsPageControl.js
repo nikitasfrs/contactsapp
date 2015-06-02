@@ -18,7 +18,7 @@ define([
         initialize: function(options) {
             this.router = options.router;
             this.pages = options.pages;
-            //this.listenTo(this.model,'change', this.render) 
+            this.listenTo(this.model,'change', this.render) 
         }, 
 
         render: function () {
@@ -34,14 +34,16 @@ define([
             'click .active': 'doNotFollow' 
         },
 
+
+
         doNotFollow: function(e) {
             e.preventDefault();
         },
 
         generateItems: function() {
             // builds pagination controls dynamically
-            var totalPages = this.model.get('totalPages'),
-                currentPage = this.model.get('currentPage'),
+            var totalPages = this.model.get('total'),
+                currentPage = this.model.get('current'),
                 i, str='', li='';
 
             if (currentPage > 0) {

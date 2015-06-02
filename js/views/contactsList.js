@@ -70,6 +70,7 @@ define([
             
             var page = e.target.text;
             e.preventDefault();  
+
             this.setUpPage(page)
             this.router.navigate('page/' + page);
         },
@@ -79,7 +80,7 @@ define([
                 reset: true,
                 page: parseInt(page)
             });
-            this.pageModel.set('currentPage', parseInt(page));
+            this.pageModel.set('current', parseInt(page));
         },
 
         addNew: function(contact) {

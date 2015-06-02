@@ -3,7 +3,7 @@ module.exports = function() {
     var _ = require("lodash");
 
     return {
-        contacts:   _.times(100, function(n) {
+        contacts:   _.times(50, function(n) {
             return {
                 id:n,
                 firstName: faker.name.firstName(),
@@ -12,6 +12,6 @@ module.exports = function() {
                 email: faker.internet.email()
             }
         }),
-        pages: { total:10, items:10 }
+        pages: { total:10, items:5 }
     }
 }

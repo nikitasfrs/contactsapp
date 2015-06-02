@@ -7,8 +7,9 @@ define([
     var ContactPage = Backbone.Model.extend({
 
         defaults: {
-            totalPages: 0,
-            currentPage: 0
+            total: 0,
+            items: 0,
+            current: 0
         }
         
         //toJSON: function() {}

@@ -28,7 +28,10 @@ define([
         initialize: function (options) {
 
             this.contactPageModel = new ContactPageModel();
-            this.contactsPaginatedCollection = new ContactsPaginatedCollection(); 
+            this.contactsPaginatedCollection = new ContactsPaginatedCollection({
+                contactPageModel: this.contactPageModel
+            }); 
+
             this.contactsPageControlView = new ContactsPageControlView({
                 model: this.contactPageModel,
                 router: this
@@ -55,24 +58,43 @@ define([
                 contactCreateFormView: this.contactCreateFormView
             });
 
-            // temporarily hardwired
-            this.contactPageModel.set('totalPages', 4);
         },
 
         routes: {
             "search/:query": "search",
-            "page/:page":"pageController",
+            "page/:page":"pageRoute",
             "*path": "defaultRoute"
         },
 
-        pageController:function(pageNum) {
-            this.contactsAppView.render();
-            this.contactsListView.setUpPage(pageNum);
+        pageRoute:function(pageNum) {
+            this.appController(pageNum);
         },
 
         defaultRoute: function () {
+            this.appController();
+        },
+
+        appController: function (page) {
+            var onSuccess, onError;
+
             this.contactsAppView.render();
-            this.contactsListView.setUpPage(0);
+            page = page || 0;
+            
+            onSuccess = _.bind(function(data) {
+                this.contactPageModel.set('total', data.total);
+                this.contactPageModel.set('items', data.items);
+                this.contactsListView.setUpPage(page);
+            }, this);
+
+            onError = _.bind(function(data) {
+                this.contactsListView.onError();
+            }, this);
+
+            $.ajax({
+                url: "http://127.0.0.1:3000/pages",
+                success: onSuccess,
+                error: onError
+            });
         }
         
     });
