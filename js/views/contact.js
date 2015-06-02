@@ -1,11 +1,13 @@
 define([
     'underscore',
     'backbone',
+    'views/waitView',
     'text!templates/contact.html',
     'text!templates/editContact.html'
 ], function (
     _, 
     Backbone,
+    WaitView,
     contactTemplate,
     editContactTemplate) {
     
@@ -32,6 +34,8 @@ define([
             this.listenTo(this.model, 'request', this.onRequest);
             this.listenTo(this.model, 'sync', this.onSync);
             this.listenTo(this.model, 'error', this.onError);
+
+            this.waitView = new WaitView();
         },
 
         onRequest: function() {
@@ -40,13 +44,13 @@ define([
 
         onSync: function () {
             // notify parent of successful update
-            
-            this.trigger('change');
+            this.trigger('contact:change');
+            this.render();
         },
 
         onError: function () {
             // error view or delegate to parent
-            this.trigger('error');
+            this.trigger('contact:error');
         },
 
         removeContact: function (e) {

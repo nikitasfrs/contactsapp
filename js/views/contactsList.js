@@ -47,7 +47,6 @@ define([
         },
         
         render: function() {
-            console.log('parent render');
             this.$el.html(this.template);
             this.contactsPageControlView.setElement(
                 this.$('#contacts-pages')).render();            
@@ -91,7 +90,9 @@ define([
 
             // keeping track of children
             this.views.push(view);
-            this.listenTo(view, 'change', this.render);
+
+            this.listenTo(view, 'contact:change', this.render);
+            this.listenTo(view, 'contact:error', this.onError);
 
             this.$contactsList.prepend(view.render().el);
         },
