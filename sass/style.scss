@@ -173,6 +173,7 @@ aside {
     .contact-delete {
         //@include make-danger-btn;
     }
+
     button {
         @include button-size($padding-small-vertical, $padding-small-horizontal, $font-size-small, $line-height-small, $border-radius-small);
     }

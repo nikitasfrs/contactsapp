@@ -2,22 +2,16 @@ define([
     'jquery',
     'backbone',
     'views/contactsList',
-    'views/contactsResults',
     'views/contactsApp',
     'views/contactCreateForm',
-    'collections/contacts',
-    'collections/contactsresults',
     'collections/contactspaginated',
     'models/contactPage',
     'views/contactsPageControl'
 ], function ($,
              Backbone,
              ContactsListView,
-             ContactsResultsView, 
              ContactsAppView, 
              ContactCreateFormView,
-             ContactsCollection, 
-             ContactsResultsCollection,
              ContactsPaginatedCollection,
              ContactPageModel,
              ContactsPageControlView) {
@@ -81,15 +75,27 @@ define([
             page = page || 0;
             
             onSuccess = _.bind(function(data) {
-                this.contactPageModel.set('total', data.total);
-                this.contactPageModel.set('items', data.items);
-                this.contactsListView.setUpPage(page);
+
+                // update page controls
+                this.contactPageModel.set({
+                    total: data.total,
+                    items: data.items,
+                    current: parseInt(page)
+                });
+
+                // fetch page data
+                this.contactsPaginatedCollection.fetch({
+                    reset:true,
+                    page:parseInt(page)
+                });
+
             }, this);
 
             onError = _.bind(function(data) {
                 this.contactsListView.onError();
             }, this);
 
+            // fetch pagination info 
             $.ajax({
                 url: "http://127.0.0.1:3000/pages",
                 success: onSuccess,

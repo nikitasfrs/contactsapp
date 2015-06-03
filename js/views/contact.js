@@ -40,13 +40,12 @@ define([
         },
 
         onSync: function () {
-            // notify parent of successful update
             this.trigger('contact:change');
+            console.log('contact changed');
             this.render();
         },
 
         onError: function () {
-            // error view or delegate to parent
             this.trigger('contact:error');
         },
 

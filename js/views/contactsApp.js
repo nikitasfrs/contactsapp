@@ -1,15 +1,11 @@
 define([
     'jquery',
     'underscore',
-    'backbone',
-    'views/contactsList',
-    'views/contactsResults',
+    'backbone'
 ], function (
     $,
     _,
-    Backbone, 
-    ContactsList,
-    ContactsResults) {
+    Backbone) {
    'use strict';
 
    var ContactsAppView = Backbone.View.extend({
@@ -21,19 +17,12 @@ define([
            this.contactsResultView = options.contactsResultView;
            this.contactCreateFormView = options.contactCreateFormView;
            this.$contacts=$('.contacts');
-
-       },
-
-       events: {
-           
        },
 
        render: function() {
 
-           //couldn't get this working with :
-           //this.$contacts.html(this.contactsListView.prerender().el);
-           this.$('.contacts').html=(this.contactsListView.prerender().el);
-
+           this.$contacts.html(this.contactsListView.prerender().el);
+           this.$('.contacts').html = this.contactsListView.prerender().el;
            this.$('.create-area').append(this.contactCreateFormView.render().el);
 
            this.$el.show();

@@ -26,6 +26,8 @@ define([
 
             this.listenTo(this.collection, 'add', this.addNew);
             this.listenTo(this.collection, 'error', this.onError);
+            
+            // reset gets triggered when col model gets sync'd ?
             this.listenTo(this.collection, 'reset', this.render);
             this.listenTo(this.collection, 'remove', this.render);
             //this.listenTo(this.collection, 'request', this.prerender);
@@ -71,18 +73,10 @@ define([
             var page = e.target.text;
             e.preventDefault();  
 
-            this.setUpPage(page)
-            this.router.navigate('page/' + page);
+            this.router.navigate('page/' + page,
+            {trigger: true, replace: true});
         },
-
-        setUpPage: function(page) {
-            this.collection.fetch({
-                reset: true,
-                page: parseInt(page)
-            });
-            this.pageModel.set('current', parseInt(page));
-        },
-
+        
         addNew: function(contact) {
             // create new contact view 
             // and append it to the main one
@@ -91,7 +85,6 @@ define([
 
             // keeping track of children
             this.views.push(view);
-
             this.listenTo(view, 'contact:change', this.render);
             this.listenTo(view, 'contact:error', this.onError);
 
@@ -99,7 +92,6 @@ define([
         },
 
         addAll: function () {
-            // close all views before adding
             this.collection.sort();
             this.collection.each(this.addNew, this);
         },
