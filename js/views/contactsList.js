@@ -25,14 +25,7 @@ define([
             this.views = [];
 
             this.listenTo(this.collection, 'add', this.addNew);
-            
-            // TODO move error handlers out
-            //this.listenTo(this.collection, 'error', this.onError);
-            
             this.listenTo(this.collection, 'reset', this.render);
-            //this.listenTo(this.collection, 'remove', this.render);
-            //this.listenTo(this.collection, 'request', this.prerender);
-            //this.listenToOnce(this.collection, 'sync', this.onFirstSync);
         },
 
         events: {
@@ -42,11 +35,6 @@ define([
         prerender: function() {
             this.$el.html(this.waitView.render().el);
             return this;
-        },
-
-        onFirstSync: function () {
-            // prerender on each col request
-            //this.listenTo(this.collection, 'request', this.prerender);
         },
         
         render: function() {
@@ -68,9 +56,7 @@ define([
         },
 
         goToPage: function(e) {
-            // we handle this internally to avoid
-            // router reinitialization 
-            
+
             var page = e.target.text;
             e.preventDefault();  
 
@@ -86,8 +72,6 @@ define([
 
             // keeping track of children
             this.views.push(view);
-            //this.listenTo(view, 'contact:change', this.render);
-            //this.listenTo(view, 'contact:error', this.onError);
 
             this.$contactsList.prepend(view.render().el);
         },
