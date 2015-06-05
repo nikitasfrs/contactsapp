@@ -35,8 +35,7 @@ define([
                 el: $('.contacts'),
                 router: this,
                 contactsPageControlView: this.contactsPageControlView,
-                collection: this.contactsPaginatedCollection,
-                pageModel: this.contactPageModel
+                collection: this.contactsPaginatedCollection
             });
 
             this.contactCreateFormView = new ContactCreateFormView({

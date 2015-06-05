@@ -19,7 +19,6 @@ define([
         initialize: function(options) {
 
             this.router = options.router;
-            this.pageModel = options.pageModel;
             this.contactsPageControlView = options.contactsPageControlView;
             this.waitView = new WaitView();
             this.views = [];
