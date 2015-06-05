@@ -25,13 +25,14 @@ define([
             this.views = [];
 
             this.listenTo(this.collection, 'add', this.addNew);
-            this.listenTo(this.collection, 'error', this.onError);
             
-            // reset gets triggered when col model gets sync'd ?
+            // TODO move error handlers out
+            //this.listenTo(this.collection, 'error', this.onError);
+            
             this.listenTo(this.collection, 'reset', this.render);
-            this.listenTo(this.collection, 'remove', this.render);
+            //this.listenTo(this.collection, 'remove', this.render);
             //this.listenTo(this.collection, 'request', this.prerender);
-            this.listenToOnce(this.collection, 'sync', this.onFirstSync);
+            //this.listenToOnce(this.collection, 'sync', this.onFirstSync);
         },
 
         events: {
@@ -45,7 +46,7 @@ define([
 
         onFirstSync: function () {
             // prerender on each col request
-            this.listenTo(this.collection, 'request', this.prerender);
+            //this.listenTo(this.collection, 'request', this.prerender);
         },
         
         render: function() {
@@ -85,8 +86,8 @@ define([
 
             // keeping track of children
             this.views.push(view);
-            this.listenTo(view, 'contact:change', this.render);
-            this.listenTo(view, 'contact:error', this.onError);
+            //this.listenTo(view, 'contact:change', this.render);
+            //this.listenTo(view, 'contact:error', this.onError);
 
             this.$contactsList.prepend(view.render().el);
         },

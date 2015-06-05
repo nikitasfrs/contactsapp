@@ -23,7 +23,7 @@ define([
 
             this.contactPageModel = new ContactPageModel();
             this.contactsPaginatedCollection = new ContactsPaginatedCollection({
-                contactPageModel: this.contactPageModel
+                defaultPageModel: this.contactPageModel
             }); 
 
             this.contactsPageControlView = new ContactsPageControlView({
@@ -69,38 +69,35 @@ define([
         },
 
         appController: function (page) {
-            var onSuccess, onError;
+            var pagesAjax, collectionFetch;
 
             this.contactsAppView.render();
             page = page || 0;
-            
-            onSuccess = _.bind(function(data) {
 
-                // update page controls
-                this.contactPageModel.set({
-                    total: data.total,
-                    items: data.items,
-                    current: parseInt(page)
-                });
-
-                // fetch page data
-                this.contactsPaginatedCollection.fetch({
-                    reset:true,
-                    page:parseInt(page)
-                });
-
-            }, this);
-
-            onError = _.bind(function(data) {
-                this.contactsListView.onError();
-            }, this);
-
-            // fetch pagination info 
-            $.ajax({
+            pagesAjax = $.ajax({
                 url: "http://127.0.0.1:3000/pages",
-                success: onSuccess,
-                error: onError
-            });
+                success: _.bind(function(data) {
+                    this.contactPageModel.set({
+                        total: data.total,
+                        items: data.items,
+                        current: parseInt(page)
+                    });
+                },this)
+            })
+
+            collectionFetch = pagesAjax.then(_.bind(
+                function(data) {
+                    this.contactsPaginatedCollection.fetch({
+                        reset:true,
+                        page:parseInt(page),
+                        pages:this.contactPageModel
+                    })
+                },
+                this)
+
+            ).fail(_.bind(function(data) {
+                this.contactsListView.onError();
+            }, this));
         }
         
     });

@@ -21,8 +21,7 @@ define([
 
        render: function() {
 
-           this.$contacts.html(this.contactsListView.prerender().el);
-           this.$('.contacts').html = this.contactsListView.prerender().el;
+           this.$contacts.html = this.contactsListView.prerender().el;
            this.$('.create-area').append(this.contactCreateFormView.render().el);
 
            this.$el.show();

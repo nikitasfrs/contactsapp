@@ -27,26 +27,28 @@ define([
         initialize: function () {
             // view will follow model
             this.listenTo(this.model, 'destroy', this.remove);
-            this.listenTo(this.model, 'change', this.render);
+            //this.listenTo(this.model, 'change', this.render);
 
             this.listenTo(this.model, 'request', this.onRequest);
             this.listenTo(this.model, 'sync', this.onSync);
-            this.listenTo(this.model, 'error', this.onError);
+            //this.listenTo(this.model, 'error', this.onError);
 
         },
 
         onRequest: function() {
             // wait--loading view
+            this.$el.html("Loading please wait..."); 
+
         },
 
         onSync: function () {
             this.trigger('contact:change');
-            console.log('contact changed');
             this.render();
         },
 
         onError: function () {
-            this.trigger('contact:error');
+            //this.trigger('contact:error');
+            this.$el.html("error");
         },
 
         removeContact: function (e) {
