@@ -33,7 +33,6 @@ define([
             
             this.contactsListView = new ContactsListView({
                 el: $('.contacts'),
-                router: this,
                 contactsPageControlView: this.contactsPageControlView,
                 collection: this.contactsPaginatedCollection
             });

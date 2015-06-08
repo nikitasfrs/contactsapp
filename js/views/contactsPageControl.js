@@ -31,10 +31,18 @@ define([
         },
 
         events: {
-            'click .active': 'doNotFollow' 
+            'click .active': 'doNotFollow',
+            'click .pagenum':'goToPage'
         },
 
+        goToPage: function(e) {
 
+            var page = e.target.text;
+            e.preventDefault();  
+
+            this.router.navigate('page/' + page,
+            {trigger: true, replace: true});
+        },
 
         doNotFollow: function(e) {
             e.preventDefault();

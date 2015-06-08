@@ -27,10 +27,6 @@ define([
             this.listenTo(this.collection, 'reset', this.render);
         },
 
-        events: {
-            'click .pagenum':'goToPage'
-        },
-
         prerender: function() {
             this.$el.html(this.waitView.render().el);
             return this;
@@ -54,15 +50,6 @@ define([
             this.$el.html("<div class='error'><h3>Could not load content</h3><p>Please check your connection status.</p></div>");
         },
 
-        goToPage: function(e) {
-
-            var page = e.target.text;
-            e.preventDefault();  
-
-            this.router.navigate('page/' + page,
-            {trigger: true, replace: true});
-        },
-        
         addNew: function(contact) {
             // create new contact view 
             // and append it to the main one
