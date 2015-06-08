@@ -1,11 +1,10 @@
 # Contact manager app
 
-Basic contact manager implementation using Backbone.js, RequireJS and bootstrap-sass.
+Basic contact manager SPA implementation using Backbone.js, RequireJS and bootstrap-sass.
 
 ## Features
 - Create, Read, Update, Delete contacts.
 - Load and error state handling.
-- [json-server](https://github.com/typicode/json-server) API mock configured.
 
 ## Install
 ```
