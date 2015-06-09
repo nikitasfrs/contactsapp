@@ -1,4 +1,4 @@
-## Contact manager app
+# Contact manager app
 
 Basic contact manager SPA implementation using Backbone.js, RequireJS and bootstrap-sass.
 
