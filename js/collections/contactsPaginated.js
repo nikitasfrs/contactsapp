@@ -1,56 +1,54 @@
-define([
-    'underscore',
-    'backbone',
-    'models/contact'
-], function(_, Backbone, Contact) {
-    'use strict';
+var Backbone = require('backbone'),
+    _ = require('underscore'),
+    Contact = require('../models/contact');
 
-    var ContactsPaginatedCollection = Backbone.Collection.extend({
+'use strict';
 
-        initialize: function(options) {
-            this.model = Contact;
-            this.url = "http://127.0.0.1:3000/contacts";
-            this.comparator = 'order';
+var ContactsPaginatedCollection = Backbone.Collection.extend({
 
-            // a default one preloaded
-            this.defaultPageModel = options.defaultPageModel;
-        },
+    initialize: function(options) {
+        this.model = Contact;
+        this.url = "http://127.0.0.1:3000/contacts";
+        this.comparator = 'order';
 
-        create: function (model, options) {
-            // implement model processing logic
-            var items = this.where({
-                firstName: model.firstName,
-                lastName: model.lastName
-            });
+        // a default one preloaded
+        this.defaultPageModel = options.defaultPageModel;
+    },
 
-            if (items.length) {
-                // model exists
-                this.trigger('contacts:duplicate');
-                return false;
-            }
-            
-            Backbone.Collection.prototype.create.apply(this,arguments);
-        },
+    create: function (model, options) {
+        // implement model processing logic
+        var items = this.where({
+            firstName: model.firstName,
+            lastName: model.lastName
+        });
 
-		nextOrder: function () {
-			return this.length ? this.last().get('order') + 1 : 1;
-		},
-        
-        sync: function(method, model, options) {
-            
-           var contactPageModel = options.pages || this.defaultPageModel, 
-               items = contactPageModel.get('items'),
-               page = contactPageModel.get('current'),
-               start = page * items,
-               end = start + items;
-
-           options.url = this.url + '?_start='+ parseInt(start) + '&_end=' + parseInt(end);
-
-           Backbone.sync.apply(this, arguments);
-
+        if (items.length) {
+            // model exists
+            this.trigger('contacts:duplicate');
+            return false;
         }
+        
+        Backbone.Collection.prototype.create.apply(this,arguments);
+    },
 
-    });
+    nextOrder: function () {
+        return this.length ? this.last().get('order') + 1 : 1;
+    },
+    
+    sync: function(method, model, options) {
+        
+       var contactPageModel = options.pages || this.defaultPageModel, 
+           items = contactPageModel.get('items'),
+           page = contactPageModel.get('current'),
+           start = page * items,
+           end = start + items;
 
-    return ContactsPaginatedCollection;
+       options.url = this.url + '?_start='+ parseInt(start) + '&_end=' + parseInt(end);
+
+       Backbone.sync.apply(this, arguments);
+
+    }
+
 });
+
+module.exports = ContactsPaginatedCollection;

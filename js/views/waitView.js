@@ -1,24 +1,19 @@
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'text!templates/wait.html'
-], function ($,
-             _, 
-             Backbone,
-             waitTemplate){
-    'use strict';
+var $ = require('jquery'),
+    Backbone = require('backbone'),
+    _ = require('underscore'),
+    waitTemplate = require('../templates/wait.html');
 
-    var WaitView = Backbone.View.extend({
-        className: 'wait',
-        template: waitTemplate, 
+'use strict';
 
-        render: function() {
-            this.$el.html(this.template);
-            return this;
-       }
-    });
+var WaitView = Backbone.View.extend({
+    className: 'wait',
+    template: waitTemplate, 
 
-    return WaitView;
- });
+    render: function() {
+        this.$el.html(this.template);
+        return this;
+   }
+});
+
+module.exports = WaitView;
         

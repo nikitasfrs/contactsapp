@@ -1,87 +1,79 @@
-define([
-    'jquery',
-    'underscore',
-    'backbone', 
-    'text!templates/contactsPages.html'
-], function ($,
-             _, 
-             Backbone, 
-             contactsPagesTmp){
-    'use strict';
-    // 
-    // NOTE: This is a child view of contactList
-    //
-    var ContactsPageControlView = Backbone.View.extend({
+var $ = require('jquery'),
+    Backbone = require('backbone'),
+    _ = require('underscore'),
+    contactsPagesTmp = require('../templates/contactsPages.html');
 
-        template: contactsPagesTmp, 
+'use strict';
+// 
+// NOTE: This is a child view of contactList
+//
+var ContactsPageControlView = Backbone.View.extend({
 
-        initialize: function(options) {
-            this.router = options.router;
-            this.listenTo(this.model,'change', this.render) 
-        }, 
+    template: contactsPagesTmp, 
 
-        render: function () {
-            // will get currentpage from model 
-            // and construct controls
-            var items = this.generateItems(),
-                tpl = ($('ul', this.template)).append(items);
-            this.$el.html(tpl);
-            return this;
-        },
+    initialize: function(options) {
+        this.router = options.router;
+        this.listenTo(this.model,'change', this.render) 
+    }, 
 
-        events: {
-            'click .active': 'doNotFollow',
-            'click .pagenum':'goToPage'
-        },
+    render: function () {
+        // will get currentpage from model 
+        // and construct controls
+        var items = this.generateItems(),
+            tpl = ($('ul', this.template())).append(items);
+        this.$el.html(tpl);
+        return this;
+    },
 
-        goToPage: function(e) {
+    events: {
+        'click .active': 'doNotFollow',
+        'click .pagenum':'goToPage'
+    },
 
-            var page = e.target.text;
-            e.preventDefault();  
+    goToPage: function(e) {
 
-            this.router.navigate('page/' + page,
-            {trigger: true, replace: true});
-        },
+        var page = e.target.text;
+        e.preventDefault();  
 
-        doNotFollow: function(e) {
-            e.preventDefault();
-        },
+        this.router.navigate('page/' + page,
+        {trigger: true, replace: true});
+    },
 
-        generateItems: function() {
-            // builds pagination controls dynamically
-            var totalPages = this.model.get('total'),
-                currentPage = this.model.get('current'),
-                i, str='', li='';
+    doNotFollow: function(e) {
+        e.preventDefault();
+    },
 
-            if (currentPage > 0) {
-                // show prev
-                str = '<li><a href="#page/' + (currentPage-1) + '" aria-label="Previous">' +
-                    '<span aria-hidden="true">&laquo;</span>' +
-                    '</a></li>';
-            }
+    generateItems: function() {
+        // builds pagination controls dynamically
+        var totalPages = this.model.get('total'),
+            currentPage = this.model.get('current'),
+            i, str='', li='';
 
-            for (i=0; i < totalPages; i++) {
-                if (currentPage === i) {
-                    li = '<li class="active"><a href="#" class="pagenum">' + i + '</a></li>';
-                } else {
-                    li = '<li><a href="#page/' + i + '" class="pagenum">' + i + '</a></li>';
-                }
-                str=str+li;
-            }
-
-            if (currentPage < totalPages-1) {
-               // show next
-               str += '<li><a href="#page/' + (currentPage+1) + '" aria-label="Previous">' +
-                    '<span aria-hidden="true">&raquo;</span>' +
-                    '</a></li>';
-            }
-
-            return str; 
+        if (currentPage > 0) {
+            // show prev
+            str = '<li><a href="#page/' + (currentPage-1) + '" aria-label="Previous">' +
+                '<span aria-hidden="true">&laquo;</span>' +
+                '</a></li>';
         }
 
+        for (i=0; i < totalPages; i++) {
+            if (currentPage === i) {
+                li = '<li class="active"><a href="#" class="pagenum">' + i + '</a></li>';
+            } else {
+                li = '<li><a href="#page/' + i + '" class="pagenum">' + i + '</a></li>';
+            }
+            str=str+li;
+        }
 
+        if (currentPage < totalPages-1) {
+           // show next
+           str += '<li><a href="#page/' + (currentPage+1) + '" aria-label="Previous">' +
+                '<span aria-hidden="true">&raquo;</span>' +
+                '</a></li>';
+        }
 
-    });
-
-    return ContactsPageControlView;
+        return str; 
+    }
 });
+
+module.exports = ContactsPageControlView;

@@ -1,88 +1,82 @@
-define([
-    'underscore',
-    'backbone',
-    'text!templates/contact.html',
-    'text!templates/editContact.html'
-], function (
-    _, 
-    Backbone,
-    contactTemplate,
-    editContactTemplate) {
-    
-    var ContactView = Backbone.View.extend({
+var $ = require('jquery'),
+    Backbone = require('backbone'),
+    _ = require('underscore'),
+    contactTemplate = require('../templates/contact.html'),
+    editContactTemplate = require('../templates/editContact.html');
 
-        template: _.template(contactTemplate),
-        editTemplate: _.template(editContactTemplate),
+var ContactView = Backbone.View.extend({
 
-        tagName: 'div',
-        className: 'contact',
+    /*template: _.template(contactTemplate),
+    editTemplate: _.template(editContactTemplate),*/
 
-        events: {
-            'click .contact-delete' : 'removeContact',
-            'click .contact-edit' : 'editContact',
-            'click .contact-cancel' : 'cancelEditing',
-            'click .contact-save' : 'saveContact'
-        },
+    tagName: 'div',
+    className: 'contact',
 
-        initialize: function () {
-            // view will follow model
-            this.listenTo(this.model, 'destroy', this.remove);
-            //this.listenTo(this.model, 'change', this.render);
+    events: {
+        'click .contact-delete' : 'removeContact',
+        'click .contact-edit' : 'editContact',
+        'click .contact-cancel' : 'cancelEditing',
+        'click .contact-save' : 'saveContact'
+    },
 
-            this.listenTo(this.model, 'request', this.onRequest);
-            this.listenTo(this.model, 'sync', this.onSync);
-            //this.listenTo(this.model, 'error', this.onError);
+    initialize: function () {
+        // view will follow model
+        this.listenTo(this.model, 'destroy', this.remove);
+        //this.listenTo(this.model, 'change', this.render);
 
-        },
+        this.listenTo(this.model, 'request', this.onRequest);
+        this.listenTo(this.model, 'sync', this.onSync);
+        //this.listenTo(this.model, 'error', this.onError);
 
-        onRequest: function() {
-            // wait--loading view
-            this.$el.html("Loading please wait..."); 
+    },
 
-        },
+    onRequest: function() {
+        // wait--loading view
+        this.$el.html("Loading please wait..."); 
 
-        onSync: function () {
-            this.trigger('contact:change');
-            this.render();
-        },
+    },
 
-        onError: function () {
-            //this.trigger('contact:error');
-            this.$el.html("error");
-        },
+    onSync: function () {
+        this.trigger('contact:change');
+        this.render();
+    },
 
-        removeContact: function (e) {
-            this.model.destroy();
-        },
+    onError: function () {
+        //this.trigger('contact:error');
+        this.$el.html("error");
+    },
 
-        editContact: function(e) {
-           this.$el.html(this.editTemplate(this.model.toJSON())); 
-        },
+    removeContact: function (e) {
+        this.model.destroy();
+    },
 
-        cancelEditing: function (e) {
-            return this.render();
-        },
+    editContact: function(e) {
+       this.$el.html(editContactTemplate(this.model.toJSON())); 
+    },
 
-        saveContact: function (e) {
-            var formData = {};
-            var onSuccess;
-            this.$el.find('input').each( function (idx, el) {
-                // trim 'contact-' class prefix
-                var prop = $(el).attr("class").substring(8);
-                formData[prop] = $(el).val();
-            });
-            this.model.set(formData);
+    cancelEditing: function (e) {
+        return this.render();
+    },
 
-            this.model.save({wait: true});
-        },
-            
-        render: function () {
-            this.$el.html(this.template(this.model.toJSON()));
-            return this;
-        }
+    saveContact: function (e) {
+        var formData = {};
+        var onSuccess;
+        this.$el.find('input').each( function (idx, el) {
+            // trim 'contact-' class prefix
+            var prop = $(el).attr("class").substring(8);
+            formData[prop] = $(el).val();
+        });
+        this.model.set(formData);
 
-    });
-
-    return ContactView;
+        this.model.save({wait: true});
+    },
+        
+    render: function () {
+        this.$el.html(contactTemplate(this.model.toJSON()));
+        return this;
+    }
 
 });
+
+module.exports = ContactView;
+

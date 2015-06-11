@@ -1,79 +1,72 @@
-define([
-    'jquery',
-    'underscore',
-    'backbone', 
-    'views/contact',
-    'views/waitView',
-    'text!templates/contactsContainer.html'
-], function ($,
-             _, 
-             Backbone, 
-             ContactView, 
-             WaitView,
-             contactsContainerTmp){
-    'use strict';
+var $ = require('jquery'),
+    Backbone = require('backbone'),
+    _ = require('underscore'),
+    ContactView = require('./contact'),
+    WaitView = require('./waitView'),
+    contactsContainerTmp = require('../templates/contactsContainer.html');
 
-    var ContactsListView = Backbone.View.extend({
-        template: contactsContainerTmp,
+'use strict';
 
-        initialize: function(options) {
+var ContactsListView = Backbone.View.extend({
+    template: contactsContainerTmp,
 
-            this.router = options.router;
-            this.contactsPageControlView = options.contactsPageControlView;
-            this.waitView = new WaitView();
-            this.views = [];
+    initialize: function(options) {
 
-            this.listenTo(this.collection, 'add', this.addNew);
-            this.listenTo(this.collection, 'reset', this.render);
-        },
+        this.router = options.router;
+        this.contactsPageControlView = options.contactsPageControlView;
+        this.waitView = new WaitView();
+        this.views = [];
 
-        prerender: function() {
-            this.$el.html(this.waitView.render().el);
-            return this;
-        },
-        
-        render: function() {
-            this.$el.html(this.template);
-            this.contactsPageControlView.setElement(
-                this.$('#contacts-pages')).render();            
+        this.listenTo(this.collection, 'add', this.addNew);
+        this.listenTo(this.collection, 'reset', this.render);
+    },
 
-            this.$contactsList = this.$('#contacts-list');
+    prerender: function() {
+        this.$el.html(this.waitView.render().el);
+        return this;
+    },
+    
+    render: function() {
+        this.$el.html(this.template);
+        this.contactsPageControlView.setElement(
+            this.$('#contacts-pages')).render();            
 
-            this.removeAll();
-            this.addAll();
+        this.$contactsList = this.$('#contacts-list');
 
-            return this;
-        },
+        this.removeAll();
+        this.addAll();
 
-        onError: function() {
-            this.trigger('fetch:error');
-            this.$el.html("<div class='error'><h3>Could not load content</h3><p>Please check your connection status.</p></div>");
-        },
+        return this;
+    },
 
-        addNew: function(contact) {
-            // create new contact view 
-            // and append it to the main one
+    onError: function() {
+        this.trigger('fetch:error');
+        this.$el.html("<div class='error'><h3>Could not load content</h3><p>Please check your connection status.</p></div>");
+    },
 
-            var view = new ContactView({ model: contact });
+    addNew: function(contact) {
+        // create new contact view 
+        // and append it to the main one
 
-            // keeping track of children
-            this.views.push(view);
+        var view = new ContactView({ model: contact });
 
-            this.$contactsList.prepend(view.render().el);
-        },
+        // keeping track of children
+        this.views.push(view);
 
-        addAll: function () {
-            this.collection.sort();
-            this.collection.each(this.addNew, this);
-        },
+        this.$contactsList.prepend(view.render().el);
+    },
 
-        removeAll: function () {
-            while (this.views.length > 0) {
-                this.views.pop().remove();
-            }
+    addAll: function () {
+        this.collection.sort();
+        this.collection.each(this.addNew, this);
+    },
+
+    removeAll: function () {
+        while (this.views.length > 0) {
+            this.views.pop().remove();
         }
-
-    });
-
-    return ContactsListView;
+    }
 });
+
+module.exports = ContactsListView;
+

@@ -1,18 +1,17 @@
-define([
-    'underscore',
-    'backbone'
-], function (_, Backbone) {
-    'use strict';
+var Backbone = require('backbone'),
+    _ = require('underscore');
 
-    var ContactPage = Backbone.Model.extend({
+'use strict';
 
-        defaults: {
-            total: 0,
-            items: 0,
-            current: 0
-        }
-        
-        //toJSON: function() {}
-    });
-    return ContactPage;
+var ContactPage = Backbone.Model.extend({
+
+    defaults: {
+        total: 0,
+        items: 0,
+        current: 0
+    }
+    
+    //toJSON: function() {}
 });
+
+module.exports = ContactPage;

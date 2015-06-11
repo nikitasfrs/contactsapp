@@ -1,25 +1,24 @@
-define([
-    'underscore',
-    'backbone'
-], function (_, Backbone) {
-    'use strict';
+var Backbone = require('backbone'),
+    _ = require('underscore');
 
-    var Contact = Backbone.Model.extend({
-        defaults: {
-            firstName: "",
-            lastName: "",
-            phone: "",
-            email: ""
-        },
+'use strict';
 
-        validate: function (attrs, options) {
-            if (!attrs.firstName || !attrs.lastName) {
-                return "First name and Last name fields cannot be empty."
-            }
+var Contact = Backbone.Model.extend({
+    defaults: {
+        firstName: "",
+        lastName: "",
+        phone: "",
+        email: ""
+    },
 
+    validate: function (attrs, options) {
+        if (!attrs.firstName || !attrs.lastName) {
+            return "First name and Last name fields cannot be empty."
         }
-        
-        //toJSON: function() {}
-    });
-    return Contact;
+
+    }
+    
+    //toJSON: function() {}
 });
+
+module.exports = Contact;
