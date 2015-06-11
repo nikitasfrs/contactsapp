@@ -17,7 +17,6 @@ define([
 
         initialize: function(options) {
             this.router = options.router;
-            this.pages = options.pages;
             this.listenTo(this.model,'change', this.render) 
         }, 
 
