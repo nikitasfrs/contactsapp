@@ -2,11 +2,11 @@
 
 Basic contact manager SPA implementation using Backbone.js, RequireJS and bootstrap-sass.
 
-## Features
+### Features
 - Create, Read, Update, Delete contacts.
 - Load and error state handling.
 
-## Install
+### Install
 ```
 npm install -g json-server
 npm install
