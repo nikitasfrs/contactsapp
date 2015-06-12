@@ -6,9 +6,9 @@ var $ = require('jquery'),
     ContactCreateFormView = require('../views/contactCreateForm'),
     ContactsPaginatedCollection = require('../collections/contactspaginated'),
     ContactPageModel = require('../models/contactPage'),
-    ContactsPageControlView = require('../views/contactsPageControl');
-   
-'use strict';
+    ContactsPageControlView = require('../views/contactsPageControl'),
+    AppDispatcher = require('../dispatchers/appdispatcher');
+
 
 var AppRouter = Backbone.Router.extend({
     initialize: function (options) {

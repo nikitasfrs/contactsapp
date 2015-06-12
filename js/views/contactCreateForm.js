@@ -2,7 +2,8 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     _ = require('underscore'),
     ContactView = require('./contact'),
-    contactCreateFormTmp = require('../templates/contactCreateForm.html');
+    contactCreateFormTmp = require('../templates/contactCreateForm.html'),
+    AppDispatcher = require('../dispatchers/appdispatcher');
 
 'use strict';
 
