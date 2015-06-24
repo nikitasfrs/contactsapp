@@ -1,7 +1,7 @@
 var Backbone = require('backbone'),
     _ = require('underscore');
 
-'use strict';
+    'use strict';
 
 var ContactPage = Backbone.Model.extend({
 
@@ -9,6 +9,10 @@ var ContactPage = Backbone.Model.extend({
         total: 0,
         items: 0,
         current: 0
+    },
+
+    initialize: function(options) {
+       this.eventbus=options.eventbus;
     }
     
     //toJSON: function() {}

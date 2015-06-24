@@ -11,8 +11,11 @@ var ContactsPaginatedCollection = Backbone.Collection.extend({
         this.url = "http://127.0.0.1:3000/contacts";
         this.comparator = 'order';
 
-        // a default one preloaded
         this.defaultPageModel = options.defaultPageModel;
+        this.eventbus = options.eventbus;
+
+        this.listenTo(this.eventbus, 'contact:create', this.create);
+        
     },
 
     create: function (model, options) {
@@ -47,7 +50,9 @@ var ContactsPaginatedCollection = Backbone.Collection.extend({
 
        Backbone.sync.apply(this, arguments);
 
-    }
+    },
+
+
 
 });
 

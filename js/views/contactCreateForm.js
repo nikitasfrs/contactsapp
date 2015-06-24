@@ -3,8 +3,8 @@ var $ = require('jquery'),
     _ = require('underscore'),
     ContactView = require('./contact'),
     contactCreateFormTmp = require('../templates/contactCreateForm.html'),
-    AppDispatcher = require('../dispatchers/appdispatcher');
-
+    ContactModel = require('../models/contact');
+   
 'use strict';
 
 var ContactCreateFormView = Backbone.View.extend({
@@ -18,8 +18,8 @@ var ContactCreateFormView = Backbone.View.extend({
         'click #clearCreateForm' : 'clear'
     },
 
-    initialize: function() {
-
+    initialize: function(options) {
+        this.eventbus = options.eventbus;
     },
 
     render: function() {
@@ -36,14 +36,14 @@ var ContactCreateFormView = Backbone.View.extend({
 
     createNew: function(e) {
 
-        this.collection.create({
+        var model = new ContactModel({
             firstName: this.$firstName.val(),
             lastName: this.$lastName.val(),
             phone: this.$phone.val(),
-            email: this.$email.val(),
-            order: this.collection.nextOrder()
-        }, {wait: true});
-        
+            email: this.$email.val()
+        });
+    
+        this.eventbus.trigger('contact:create', model);
     },
 
     clear: function(e) {

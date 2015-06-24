@@ -2,7 +2,7 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     _ = require('underscore'),
     contactsPagesTmp = require('../templates/contactsPages.html');
-
+   
 'use strict';
 // 
 // NOTE: This is a child view of contactList
@@ -12,41 +12,47 @@ var ContactsPageControlView = Backbone.View.extend({
     template: contactsPagesTmp, 
 
     initialize: function(options) {
-        this.router = options.router;
+        this.eventbus = options.eventbus;
         this.listenTo(this.model,'change', this.render) 
     }, 
 
     render: function () {
         // will get currentpage from model 
         // and construct controls
-        var items = this.generateItems(),
-            tpl = ($('ul', this.template())).append(items);
+        var items = this.generateItems();
+        var tpl = ($('ul', this.template())).html(items);
         this.$el.html(tpl);
         return this;
     },
 
     events: {
-        'click .active': 'doNotFollow',
+        'click .selected': 'doNotFollow',
         'click .pagenum':'goToPage'
     },
+
 
     goToPage: function(e) {
 
         var page = e.target.text;
         e.preventDefault();  
 
-        this.router.navigate('page/' + page,
-        {trigger: true, replace: true});
+        //this.router.navigate('page/' + page,
+        //{trigger: true, replace: true});
+        
+        this.model.set({current: page});
+        this.eventbus.trigger("page:change", this.model);
+
     },
 
     doNotFollow: function(e) {
         e.preventDefault();
+        return false;
     },
 
     generateItems: function() {
         // builds pagination controls dynamically
-        var totalPages = this.model.get('total'),
-            currentPage = this.model.get('current'),
+        var totalPages = parseInt(this.model.get('total')),
+            currentPage = parseInt(this.model.get('current')),
             i, str='', li='';
 
         if (currentPage > 0) {
@@ -58,7 +64,7 @@ var ContactsPageControlView = Backbone.View.extend({
 
         for (i=0; i < totalPages; i++) {
             if (currentPage === i) {
-                li = '<li class="active"><a href="#" class="pagenum">' + i + '</a></li>';
+                li = '<li class="active"><a href="#" class="selected">' + i + '</a></li>';
             } else {
                 li = '<li><a href="#page/' + i + '" class="pagenum">' + i + '</a></li>';
             }

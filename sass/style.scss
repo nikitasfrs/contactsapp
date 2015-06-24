@@ -146,9 +146,13 @@ aside {
 .contacts {
     @include make-md-column(5);
     position:relative;
-    height:500px;
     
-    & > .wait, & > .error {
+    #contacts-container {
+        position: relative;
+        height:500px;
+    }
+
+    .wait, .error {
         width:250px;
         position: relative;
         margin-left:-5%;

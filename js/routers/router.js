@@ -1,95 +1,31 @@
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    _ = require('underscore'),
-    ContactsListView = require('../views/contactsList'),
-    ContactsAppView = require('../views/contactsApp'),
-    ContactCreateFormView = require('../views/contactCreateForm'),
-    ContactsPaginatedCollection = require('../collections/contactspaginated'),
-    ContactPageModel = require('../models/contactPage'),
-    ContactsPageControlView = require('../views/contactsPageControl'),
-    AppDispatcher = require('../dispatchers/appdispatcher');
-
+    _ = require('underscore');
 
 var AppRouter = Backbone.Router.extend({
     initialize: function (options) {
-
-        this.contactPageModel = new ContactPageModel();
-        this.contactsPaginatedCollection = new ContactsPaginatedCollection({
-            defaultPageModel: this.contactPageModel
-        }); 
-
-        this.contactsPageControlView = new ContactsPageControlView({
-            model: this.contactPageModel,
-            router: this
-        });
-        
-        this.contactsListView = new ContactsListView({
-            el: $('.contacts'),
-            contactsPageControlView: this.contactsPageControlView,
-            collection: this.contactsPaginatedCollection
-        });
-
-        this.contactCreateFormView = new ContactCreateFormView({
-            //router:router,
-            collection: this.contactsPaginatedCollection
-        });
-        
-        this.contactsAppView = new ContactsAppView({
-            el: '#contacts-app',
-            router:this,
-            contactsListView: this.contactsListView,
-            contactsResultsView: this.contactsResultsView,
-            contactCreateFormView: this.contactCreateFormView
-        });
+        this.appController = options.appController; 
+        this.eventbus = options.eventbus;
+        this.listenTo(this.eventbus, "page:change", this.pageChanged);
 
     },
 
     routes: {
-        "search/:query": "search",
         "page/:page":"pageRoute",
         "*path": "defaultRoute"
     },
-
     pageRoute:function(pageNum) {
-        this.appController(pageNum);
+        this.appController.pageAction(pageNum);
     },
 
     defaultRoute: function () {
-        this.appController();
+        this.appController.pageAction();
     },
 
-    appController: function (page) {
-        var pagesAjax, collectionFetch;
-
-        this.contactsAppView.render();
-        page = page || 0;
-
-        pagesAjax = $.ajax({
-            url: "http://127.0.0.1:3000/pages",
-            success: _.bind(function(data) {
-                this.contactPageModel.set({
-                    total: data.total,
-                    items: data.items,
-                    current: parseInt(page)
-                });
-            },this)
-        })
-
-        collectionFetch = pagesAjax.then(_.bind(
-            function(data) {
-                this.contactsPaginatedCollection.fetch({
-                    reset:true,
-                    page:parseInt(page),
-                    pages:this.contactPageModel
-                })
-            },
-            this)
-
-        ).fail(_.bind(function(data) {
-            this.contactsListView.onError();
-        }, this));
+    pageChanged: function(pageModel) {
+        this.navigate('page/' + pageModel.get('current'));
     }
-    
+
 });
 
 module.exports = AppRouter;

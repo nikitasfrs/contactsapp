@@ -3,36 +3,46 @@ var $ = require('jquery'),
     _ = require('underscore'),
     ContactView = require('./contact'),
     WaitView = require('./waitView'),
-    contactsContainerTmp = require('../templates/contactsContainer.html');
+    contactsContainerTmp = require('../templates/contactsListContainer.html');
 
-'use strict';
+    'use strict';
 
 var ContactsListView = Backbone.View.extend({
     template: contactsContainerTmp,
 
     initialize: function(options) {
 
-        this.router = options.router;
         this.contactsPageControlView = options.contactsPageControlView;
+
         this.waitView = new WaitView();
         this.views = [];
 
         this.listenTo(this.collection, 'add', this.addNew);
+        this.listenTo(this.collection, 'request', this.prerender);
+        this.listenTo(this.collection, 'error', this.onError);
         this.listenTo(this.collection, 'reset', this.render);
+        this.eventbus = options.eventbus;
+
     },
 
     prerender: function() {
+
+        var origin = arguments[0];
+        if (origin === this.collection || !origin){
+            return this.wait();
+        }
+        
+        return this;
+    },
+
+    wait: function() {
         this.$el.html(this.waitView.render().el);
         return this;
     },
     
     render: function() {
-        this.$el.html(this.template);
-        this.contactsPageControlView.setElement(
-            this.$('#contacts-pages')).render();            
 
-        this.$contactsList = this.$('#contacts-list');
-
+        this.$el.html(this.template());
         this.removeAll();
         this.addAll();
 
@@ -40,20 +50,23 @@ var ContactsListView = Backbone.View.extend({
     },
 
     onError: function() {
-        this.trigger('fetch:error');
-        this.$el.html("<div class='error'><h3>Could not load content</h3><p>Please check your connection status.</p></div>");
+        var origin = arguments[0];
+        if (origin === this.collection || !origin){
+            this.trigger('fetch:error');
+            this.$el.html("<div class='error'><h3>Could not load content</h3><p>Please check your connection status.</p></div>");
+        }
+
+        return this;
+
     },
 
     addNew: function(contact) {
-        // create new contact view 
-        // and append it to the main one
 
+        // keep track of children
         var view = new ContactView({ model: contact });
-
-        // keeping track of children
         this.views.push(view);
 
-        this.$contactsList.prepend(view.render().el);
+        this.$('#contacts-list').prepend(view.render().el);
     },
 
     addAll: function () {

@@ -12,8 +12,11 @@ var ContactsPaginatedCollection = Backbone.Collection.extend({
         this.url = "http://127.0.0.1:3000/contacts";
         this.comparator = 'order';
 
-        // a default one preloaded
         this.defaultPageModel = options.defaultPageModel;
+        this.eventbus = options.eventbus;
+
+        this.listenTo(this.eventbus, 'contact:create', this.create);
+        
     },
 
     create: function (model, options) {
@@ -48,29 +51,130 @@ var ContactsPaginatedCollection = Backbone.Collection.extend({
 
        Backbone.sync.apply(this, arguments);
 
-    }
+    },
+
+
 
 });
 
 module.exports = ContactsPaginatedCollection;
 
-},{"../models/contact":4,"backbone":19,"underscore":24}],2:[function(require,module,exports){
-'use strict';
-var Dispatcher = require('flux').Dispatcher;
-module.exports = new Dispatcher();
+},{"../models/contact":4,"backbone":20,"underscore":22}],2:[function(require,module,exports){
+var Backbone = require('backbone'),
+    $ = require('jquery'),
+    _ = require('underscore'),
+    ContactsListView = require('../views/contactsList'),
+    ContactsAppView = require('../views/contactsApp'),
+    ContactCreateFormView = require('../views/contactCreateForm'),
+    ContactsPaginatedCollection = require('../collections/contactsPaginated'),
+    ContactPageModel = require('../models/contactPage'),
+    ContactsPageControlView = require('../views/contactsPageControl');
 
-},{"flux":20}],3:[function(require,module,exports){
-var $ = require('jquery'),
-    Backbone = require('backbone'),
-    AppRouter = require('./routers/router'),
-    router = new AppRouter();
+var AppController = function(options){
+    this.initialize.apply(this, arguments);
+};
+
+// TODO share the same event bus as views
+_.extend(AppController.prototype, Backbone.Events, {
+    initialize: function (options) {
+
+        this.eventbus = options.eventbus;
+        this.listenTo(this.eventbus, 'page:change', this.pageChanged);
+
+
+        this.contactPageModel = new ContactPageModel({
+            eventbus:this.eventbus
+        });
+
+        this.contactsPaginatedCollection = new ContactsPaginatedCollection({
+            defaultPageModel: this.contactPageModel,
+            eventbus:this.eventbus
+        }); 
+
+        this.contactsPageControlView = new ContactsPageControlView({
+            model: this.contactPageModel,
+            eventbus:this.eventbus
+        });
+        
+        this.contactsListView = new ContactsListView({
+            contactsPageControlView: this.contactsPageControlView,
+            collection: this.contactsPaginatedCollection,
+            eventbus:this.eventbus
+        });
+
+        this.contactCreateFormView = new ContactCreateFormView({
+            //router:router,
+            eventbus:this.eventbus
+        });
+        
+        this.contactsAppView = new ContactsAppView({
+            el: '#contacts-app',
+            contactsListView: this.contactsListView,
+            contactsPageControlView: this.contactsPageControlView,
+            contactCreateFormView: this.contactCreateFormView,
+            eventbus:this.eventbus
+        });
+    },
+
+    pageChanged: function (pageModel) {
+        this.contactsPaginatedCollection.fetch({
+            reset:true,
+            pageModel:pageModel
+        });
+    },
+
+    pageAction: function(page) {
+        var page = page || 0; 
+        this.contactsAppView.render();
+
+        function createPageModel (data) {
+            this.contactPageModel.set({
+                total: data.total,
+                items: data.items,
+                current: parseInt(page)
+            });
+        }
+        function fetchCollection(data) {
+            this.contactsPaginatedCollection.fetch({
+                reset:true,
+                pageModel:this.contactPageModel
+            });
+        }
+        function showError() {
+            this.contactsListView.onError();
+        }
+
+        $.ajax({
+            url: "http://127.0.0.1:3000/pages",
+            success: _.bind(createPageModel, this)
+        }
+        ).then(_.bind(fetchCollection, this)
+        ).fail(_.bind(showError, this));
+
+    }
+});
+
+
+module.exports = AppController;
+
+},{"../collections/contactsPaginated":1,"../models/contactPage":5,"../views/contactCreateForm":15,"../views/contactsApp":16,"../views/contactsList":17,"../views/contactsPageControl":18,"backbone":20,"jquery":21,"underscore":22}],3:[function(require,module,exports){
+var $ = require('jquery');
+var Backbone = require('backbone');
+var _ = require('underscore');
+var AppRouter = require('./routers/router');
+var AppController = require('./controllers/appController');
+
+var vent = _.extend({}, Backbone.Events);
+var appController = new AppController({eventbus:vent});
+var appRouter = new AppRouter({appController:appController, eventbus:vent});
+
     
 'use strict';
  
 Backbone.$ = $;
 Backbone.history.start(); 
 
-},{"./routers/router":6,"backbone":19,"jquery":23}],4:[function(require,module,exports){
+},{"./controllers/appController":2,"./routers/router":6,"backbone":20,"jquery":21,"underscore":22}],4:[function(require,module,exports){
 var Backbone = require('backbone'),
     _ = require('underscore');
 
@@ -96,11 +200,11 @@ var Contact = Backbone.Model.extend({
 
 module.exports = Contact;
 
-},{"backbone":19,"underscore":24}],5:[function(require,module,exports){
+},{"backbone":20,"underscore":22}],5:[function(require,module,exports){
 var Backbone = require('backbone'),
     _ = require('underscore');
 
-'use strict';
+    'use strict';
 
 var ContactPage = Backbone.Model.extend({
 
@@ -108,6 +212,10 @@ var ContactPage = Backbone.Model.extend({
         total: 0,
         items: 0,
         current: 0
+    },
+
+    initialize: function(options) {
+       this.eventbus=options.eventbus;
     }
     
     //toJSON: function() {}
@@ -115,105 +223,41 @@ var ContactPage = Backbone.Model.extend({
 
 module.exports = ContactPage;
 
-},{"backbone":19,"underscore":24}],6:[function(require,module,exports){
+},{"backbone":20,"underscore":22}],6:[function(require,module,exports){
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    _ = require('underscore'),
-    ContactsListView = require('../views/contactsList'),
-    ContactsAppView = require('../views/contactsApp'),
-    ContactCreateFormView = require('../views/contactCreateForm'),
-    ContactsPaginatedCollection = require('../collections/contactspaginated'),
-    ContactPageModel = require('../models/contactPage'),
-    ContactsPageControlView = require('../views/contactsPageControl'),
-    AppDispatcher = require('../dispatchers/appdispatcher');
-
+    _ = require('underscore');
 
 var AppRouter = Backbone.Router.extend({
     initialize: function (options) {
-
-        this.contactPageModel = new ContactPageModel();
-        this.contactsPaginatedCollection = new ContactsPaginatedCollection({
-            defaultPageModel: this.contactPageModel
-        }); 
-
-        this.contactsPageControlView = new ContactsPageControlView({
-            model: this.contactPageModel,
-            router: this
-        });
-        
-        this.contactsListView = new ContactsListView({
-            el: $('.contacts'),
-            contactsPageControlView: this.contactsPageControlView,
-            collection: this.contactsPaginatedCollection
-        });
-
-        this.contactCreateFormView = new ContactCreateFormView({
-            //router:router,
-            collection: this.contactsPaginatedCollection
-        });
-        
-        this.contactsAppView = new ContactsAppView({
-            el: '#contacts-app',
-            router:this,
-            contactsListView: this.contactsListView,
-            contactsResultsView: this.contactsResultsView,
-            contactCreateFormView: this.contactCreateFormView
-        });
+        this.appController = options.appController; 
+        this.eventbus = options.eventbus;
+        this.listenTo(this.eventbus, "page:change", this.pageChanged);
 
     },
 
     routes: {
-        "search/:query": "search",
         "page/:page":"pageRoute",
         "*path": "defaultRoute"
     },
-
     pageRoute:function(pageNum) {
-        this.appController(pageNum);
+        this.appController.pageAction(pageNum);
     },
 
     defaultRoute: function () {
-        this.appController();
+        this.appController.pageAction();
     },
 
-    appController: function (page) {
-        var pagesAjax, collectionFetch;
-
-        this.contactsAppView.render();
-        page = page || 0;
-
-        pagesAjax = $.ajax({
-            url: "http://127.0.0.1:3000/pages",
-            success: _.bind(function(data) {
-                this.contactPageModel.set({
-                    total: data.total,
-                    items: data.items,
-                    current: parseInt(page)
-                });
-            },this)
-        })
-
-        collectionFetch = pagesAjax.then(_.bind(
-            function(data) {
-                this.contactsPaginatedCollection.fetch({
-                    reset:true,
-                    page:parseInt(page),
-                    pages:this.contactPageModel
-                })
-            },
-            this)
-
-        ).fail(_.bind(function(data) {
-            this.contactsListView.onError();
-        }, this));
+    pageChanged: function(pageModel) {
+        this.navigate('page/' + pageModel.get('current'));
     }
-    
+
 });
 
 module.exports = AppRouter;
 
 
-},{"../collections/contactspaginated":1,"../dispatchers/appdispatcher":2,"../models/contactPage":5,"../views/contactCreateForm":14,"../views/contactsApp":15,"../views/contactsList":16,"../views/contactsPageControl":17,"backbone":19,"jquery":23,"underscore":24}],7:[function(require,module,exports){
+},{"backbone":20,"jquery":21,"underscore":22}],7:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
@@ -231,7 +275,7 @@ __p+='<h3 class="contact-fullName">'+
 return __p;
 };
 
-},{"underscore":24}],8:[function(require,module,exports){
+},{"underscore":22}],8:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
@@ -241,17 +285,27 @@ __p+='<h2>Create new</h2><input id="firstName" placeholder="First Name"> <input 
 return __p;
 };
 
-},{"underscore":24}],9:[function(require,module,exports){
+},{"underscore":22}],9:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
-__p+='<h2>Contacts</h2><div id="contacts-list"></div><div id="contacts-pages"></div>';
+__p+='<aside><div class="create-area"></div><div class="about"><h2>About</h2><p>Built with <a href="http://backbonejs.org/">Backbone.js</a>, <a href="http://requirejs.org/">RequireJS</a> and <a href="https://github.com/twbs/bootstrap-sass">bootstrap-sass</a>.</p><p>by <a href="http://nikitasfr.com">Nikitas Frantzeskakis</a></p></div></aside><section class="contacts"><div id="contacts-container"></div><div id="contacts-pages"></div></section>';
 }
 return __p;
 };
 
-},{"underscore":24}],10:[function(require,module,exports){
+},{"underscore":22}],10:[function(require,module,exports){
+var _ = require('underscore');
+module.exports = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+with(obj||{}){
+__p+='<h2>Contacts</h2><div id="contacts-list"></div>';
+}
+return __p;
+};
+
+},{"underscore":22}],11:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
@@ -261,7 +315,7 @@ __p+='<nav><ul class="pagination"></ul></nav>';
 return __p;
 };
 
-},{"underscore":24}],11:[function(require,module,exports){
+},{"underscore":22}],12:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
@@ -279,7 +333,7 @@ __p+='<p>First name: <input class="contact-firstName" value="'+
 return __p;
 };
 
-},{"underscore":24}],12:[function(require,module,exports){
+},{"underscore":22}],13:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
@@ -289,7 +343,7 @@ __p+='Loading data...';
 return __p;
 };
 
-},{"underscore":24}],13:[function(require,module,exports){
+},{"underscore":22}],14:[function(require,module,exports){
 var $ = require('jquery'),
     Backbone = require('backbone'),
     _ = require('underscore'),
@@ -373,14 +427,14 @@ var ContactView = Backbone.View.extend({
 module.exports = ContactView;
 
 
-},{"../templates/contact.html":7,"../templates/editContact.html":11,"backbone":19,"jquery":23,"underscore":24}],14:[function(require,module,exports){
+},{"../templates/contact.html":7,"../templates/editContact.html":12,"backbone":20,"jquery":21,"underscore":22}],15:[function(require,module,exports){
 var $ = require('jquery'),
     Backbone = require('backbone'),
     _ = require('underscore'),
     ContactView = require('./contact'),
     contactCreateFormTmp = require('../templates/contactCreateForm.html'),
-    AppDispatcher = require('../dispatchers/appdispatcher');
-
+    ContactModel = require('../models/contact');
+   
 'use strict';
 
 var ContactCreateFormView = Backbone.View.extend({
@@ -394,8 +448,8 @@ var ContactCreateFormView = Backbone.View.extend({
         'click #clearCreateForm' : 'clear'
     },
 
-    initialize: function() {
-
+    initialize: function(options) {
+        this.eventbus = options.eventbus;
     },
 
     render: function() {
@@ -412,14 +466,14 @@ var ContactCreateFormView = Backbone.View.extend({
 
     createNew: function(e) {
 
-        this.collection.create({
+        var model = new ContactModel({
             firstName: this.$firstName.val(),
             lastName: this.$lastName.val(),
             phone: this.$phone.val(),
-            email: this.$email.val(),
-            order: this.collection.nextOrder()
-        }, {wait: true});
-        
+            email: this.$email.val()
+        });
+    
+        this.eventbus.trigger('contact:create', model);
     },
 
     clear: function(e) {
@@ -431,30 +485,39 @@ var ContactCreateFormView = Backbone.View.extend({
 
 module.exports = ContactCreateFormView;
 
-},{"../dispatchers/appdispatcher":2,"../templates/contactCreateForm.html":8,"./contact":13,"backbone":19,"jquery":23,"underscore":24}],15:[function(require,module,exports){
+},{"../models/contact":4,"../templates/contactCreateForm.html":8,"./contact":14,"backbone":20,"jquery":21,"underscore":22}],16:[function(require,module,exports){
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    _ = require('underscore');
+    _ = require('underscore'),
+    contactsContainerTmpl = require('../templates/contactsContainer.html');
 
 'use strict';
 
 var ContactsAppView = Backbone.View.extend({
 
-   template:null,
+   template: contactsContainerTmpl,
 
    initialize: function(options) {
        this.contactsListView = options.contactsListView
-       this.contactsResultView = options.contactsResultView;
+       this.contactsPageControlView = options.contactsPageControlView;
        this.contactCreateFormView = options.contactCreateFormView;
-       this.$contacts=$('.contacts');
+
+       this.eventbus = options.eventbus;
    },
 
+
    render: function() {
+       this.$el.html(this.template());
 
-       this.$contacts.html = this.contactsListView.prerender().el;
-       this.$('.create-area').append(this.contactCreateFormView.render().el);
+       this.contactsListView.setElement(
+           this.$('#contacts-container')).wait();
 
-       this.$el.show();
+       this.contactsPageControlView.setElement(
+            this.$('#contacts-pages')).render(); 
+
+        this.contactCreateFormView.setElement(
+            this.$('.create-area')).render();
+
        return this;
    }
 });
@@ -463,42 +526,52 @@ module.exports = ContactsAppView;
 
    
 
-},{"backbone":19,"jquery":23,"underscore":24}],16:[function(require,module,exports){
+},{"../templates/contactsContainer.html":9,"backbone":20,"jquery":21,"underscore":22}],17:[function(require,module,exports){
 var $ = require('jquery'),
     Backbone = require('backbone'),
     _ = require('underscore'),
     ContactView = require('./contact'),
     WaitView = require('./waitView'),
-    contactsContainerTmp = require('../templates/contactsContainer.html');
+    contactsContainerTmp = require('../templates/contactsListContainer.html');
 
-'use strict';
+    'use strict';
 
 var ContactsListView = Backbone.View.extend({
     template: contactsContainerTmp,
 
     initialize: function(options) {
 
-        this.router = options.router;
         this.contactsPageControlView = options.contactsPageControlView;
+
         this.waitView = new WaitView();
         this.views = [];
 
         this.listenTo(this.collection, 'add', this.addNew);
+        this.listenTo(this.collection, 'request', this.prerender);
+        this.listenTo(this.collection, 'error', this.onError);
         this.listenTo(this.collection, 'reset', this.render);
+        this.eventbus = options.eventbus;
+
     },
 
     prerender: function() {
+
+        var origin = arguments[0];
+        if (origin === this.collection || !origin){
+            return this.wait();
+        }
+        
+        return this;
+    },
+
+    wait: function() {
         this.$el.html(this.waitView.render().el);
         return this;
     },
     
     render: function() {
-        this.$el.html(this.template);
-        this.contactsPageControlView.setElement(
-            this.$('#contacts-pages')).render();            
 
-        this.$contactsList = this.$('#contacts-list');
-
+        this.$el.html(this.template());
         this.removeAll();
         this.addAll();
 
@@ -506,20 +579,23 @@ var ContactsListView = Backbone.View.extend({
     },
 
     onError: function() {
-        this.trigger('fetch:error');
-        this.$el.html("<div class='error'><h3>Could not load content</h3><p>Please check your connection status.</p></div>");
+        var origin = arguments[0];
+        if (origin === this.collection || !origin){
+            this.trigger('fetch:error');
+            this.$el.html("<div class='error'><h3>Could not load content</h3><p>Please check your connection status.</p></div>");
+        }
+
+        return this;
+
     },
 
     addNew: function(contact) {
-        // create new contact view 
-        // and append it to the main one
 
+        // keep track of children
         var view = new ContactView({ model: contact });
-
-        // keeping track of children
         this.views.push(view);
 
-        this.$contactsList.prepend(view.render().el);
+        this.$('#contacts-list').prepend(view.render().el);
     },
 
     addAll: function () {
@@ -537,12 +613,12 @@ var ContactsListView = Backbone.View.extend({
 module.exports = ContactsListView;
 
 
-},{"../templates/contactsContainer.html":9,"./contact":13,"./waitView":18,"backbone":19,"jquery":23,"underscore":24}],17:[function(require,module,exports){
+},{"../templates/contactsListContainer.html":10,"./contact":14,"./waitView":19,"backbone":20,"jquery":21,"underscore":22}],18:[function(require,module,exports){
 var $ = require('jquery'),
     Backbone = require('backbone'),
     _ = require('underscore'),
     contactsPagesTmp = require('../templates/contactsPages.html');
-
+   
 'use strict';
 // 
 // NOTE: This is a child view of contactList
@@ -552,41 +628,47 @@ var ContactsPageControlView = Backbone.View.extend({
     template: contactsPagesTmp, 
 
     initialize: function(options) {
-        this.router = options.router;
+        this.eventbus = options.eventbus;
         this.listenTo(this.model,'change', this.render) 
     }, 
 
     render: function () {
         // will get currentpage from model 
         // and construct controls
-        var items = this.generateItems(),
-            tpl = ($('ul', this.template())).append(items);
+        var items = this.generateItems();
+        var tpl = ($('ul', this.template())).html(items);
         this.$el.html(tpl);
         return this;
     },
 
     events: {
-        'click .active': 'doNotFollow',
+        'click .selected': 'doNotFollow',
         'click .pagenum':'goToPage'
     },
+
 
     goToPage: function(e) {
 
         var page = e.target.text;
         e.preventDefault();  
 
-        this.router.navigate('page/' + page,
-        {trigger: true, replace: true});
+        //this.router.navigate('page/' + page,
+        //{trigger: true, replace: true});
+        
+        this.model.set({current: page});
+        this.eventbus.trigger("page:change", this.model);
+
     },
 
     doNotFollow: function(e) {
         e.preventDefault();
+        return false;
     },
 
     generateItems: function() {
         // builds pagination controls dynamically
-        var totalPages = this.model.get('total'),
-            currentPage = this.model.get('current'),
+        var totalPages = parseInt(this.model.get('total')),
+            currentPage = parseInt(this.model.get('current')),
             i, str='', li='';
 
         if (currentPage > 0) {
@@ -598,7 +680,7 @@ var ContactsPageControlView = Backbone.View.extend({
 
         for (i=0; i < totalPages; i++) {
             if (currentPage === i) {
-                li = '<li class="active"><a href="#" class="pagenum">' + i + '</a></li>';
+                li = '<li class="active"><a href="#" class="selected">' + i + '</a></li>';
             } else {
                 li = '<li><a href="#page/' + i + '" class="pagenum">' + i + '</a></li>';
             }
@@ -618,7 +700,7 @@ var ContactsPageControlView = Backbone.View.extend({
 
 module.exports = ContactsPageControlView;
 
-},{"../templates/contactsPages.html":10,"backbone":19,"jquery":23,"underscore":24}],18:[function(require,module,exports){
+},{"../templates/contactsPages.html":11,"backbone":20,"jquery":21,"underscore":22}],19:[function(require,module,exports){
 var $ = require('jquery'),
     Backbone = require('backbone'),
     _ = require('underscore'),
@@ -639,7 +721,7 @@ var WaitView = Backbone.View.extend({
 module.exports = WaitView;
         
 
-},{"../templates/wait.html":12,"backbone":19,"jquery":23,"underscore":24}],19:[function(require,module,exports){
+},{"../templates/wait.html":13,"backbone":20,"jquery":21,"underscore":22}],20:[function(require,module,exports){
 (function (global){
 //     Backbone.js 1.2.1
 
@@ -2516,326 +2598,7 @@ module.exports = WaitView;
 }));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jquery":23,"underscore":24}],20:[function(require,module,exports){
-/**
- * Copyright (c) 2014-2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
-
-module.exports.Dispatcher = require('./lib/Dispatcher')
-
-},{"./lib/Dispatcher":21}],21:[function(require,module,exports){
-/*
- * Copyright (c) 2014, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule Dispatcher
- * @typechecks
- */
-
-"use strict";
-
-var invariant = require('./invariant');
-
-var _lastID = 1;
-var _prefix = 'ID_';
-
-/**
- * Dispatcher is used to broadcast payloads to registered callbacks. This is
- * different from generic pub-sub systems in two ways:
- *
- *   1) Callbacks are not subscribed to particular events. Every payload is
- *      dispatched to every registered callback.
- *   2) Callbacks can be deferred in whole or part until other callbacks have
- *      been executed.
- *
- * For example, consider this hypothetical flight destination form, which
- * selects a default city when a country is selected:
- *
- *   var flightDispatcher = new Dispatcher();
- *
- *   // Keeps track of which country is selected
- *   var CountryStore = {country: null};
- *
- *   // Keeps track of which city is selected
- *   var CityStore = {city: null};
- *
- *   // Keeps track of the base flight price of the selected city
- *   var FlightPriceStore = {price: null}
- *
- * When a user changes the selected city, we dispatch the payload:
- *
- *   flightDispatcher.dispatch({
- *     actionType: 'city-update',
- *     selectedCity: 'paris'
- *   });
- *
- * This payload is digested by `CityStore`:
- *
- *   flightDispatcher.register(function(payload) {
- *     if (payload.actionType === 'city-update') {
- *       CityStore.city = payload.selectedCity;
- *     }
- *   });
- *
- * When the user selects a country, we dispatch the payload:
- *
- *   flightDispatcher.dispatch({
- *     actionType: 'country-update',
- *     selectedCountry: 'australia'
- *   });
- *
- * This payload is digested by both stores:
- *
- *    CountryStore.dispatchToken = flightDispatcher.register(function(payload) {
- *     if (payload.actionType === 'country-update') {
- *       CountryStore.country = payload.selectedCountry;
- *     }
- *   });
- *
- * When the callback to update `CountryStore` is registered, we save a reference
- * to the returned token. Using this token with `waitFor()`, we can guarantee
- * that `CountryStore` is updated before the callback that updates `CityStore`
- * needs to query its data.
- *
- *   CityStore.dispatchToken = flightDispatcher.register(function(payload) {
- *     if (payload.actionType === 'country-update') {
- *       // `CountryStore.country` may not be updated.
- *       flightDispatcher.waitFor([CountryStore.dispatchToken]);
- *       // `CountryStore.country` is now guaranteed to be updated.
- *
- *       // Select the default city for the new country
- *       CityStore.city = getDefaultCityForCountry(CountryStore.country);
- *     }
- *   });
- *
- * The usage of `waitFor()` can be chained, for example:
- *
- *   FlightPriceStore.dispatchToken =
- *     flightDispatcher.register(function(payload) {
- *       switch (payload.actionType) {
- *         case 'country-update':
- *           flightDispatcher.waitFor([CityStore.dispatchToken]);
- *           FlightPriceStore.price =
- *             getFlightPriceStore(CountryStore.country, CityStore.city);
- *           break;
- *
- *         case 'city-update':
- *           FlightPriceStore.price =
- *             FlightPriceStore(CountryStore.country, CityStore.city);
- *           break;
- *     }
- *   });
- *
- * The `country-update` payload will be guaranteed to invoke the stores'
- * registered callbacks in order: `CountryStore`, `CityStore`, then
- * `FlightPriceStore`.
- */
-
-  function Dispatcher() {
-    this.$Dispatcher_callbacks = {};
-    this.$Dispatcher_isPending = {};
-    this.$Dispatcher_isHandled = {};
-    this.$Dispatcher_isDispatching = false;
-    this.$Dispatcher_pendingPayload = null;
-  }
-
-  /**
-   * Registers a callback to be invoked with every dispatched payload. Returns
-   * a token that can be used with `waitFor()`.
-   *
-   * @param {function} callback
-   * @return {string}
-   */
-  Dispatcher.prototype.register=function(callback) {
-    var id = _prefix + _lastID++;
-    this.$Dispatcher_callbacks[id] = callback;
-    return id;
-  };
-
-  /**
-   * Removes a callback based on its token.
-   *
-   * @param {string} id
-   */
-  Dispatcher.prototype.unregister=function(id) {
-    invariant(
-      this.$Dispatcher_callbacks[id],
-      'Dispatcher.unregister(...): `%s` does not map to a registered callback.',
-      id
-    );
-    delete this.$Dispatcher_callbacks[id];
-  };
-
-  /**
-   * Waits for the callbacks specified to be invoked before continuing execution
-   * of the current callback. This method should only be used by a callback in
-   * response to a dispatched payload.
-   *
-   * @param {array<string>} ids
-   */
-  Dispatcher.prototype.waitFor=function(ids) {
-    invariant(
-      this.$Dispatcher_isDispatching,
-      'Dispatcher.waitFor(...): Must be invoked while dispatching.'
-    );
-    for (var ii = 0; ii < ids.length; ii++) {
-      var id = ids[ii];
-      if (this.$Dispatcher_isPending[id]) {
-        invariant(
-          this.$Dispatcher_isHandled[id],
-          'Dispatcher.waitFor(...): Circular dependency detected while ' +
-          'waiting for `%s`.',
-          id
-        );
-        continue;
-      }
-      invariant(
-        this.$Dispatcher_callbacks[id],
-        'Dispatcher.waitFor(...): `%s` does not map to a registered callback.',
-        id
-      );
-      this.$Dispatcher_invokeCallback(id);
-    }
-  };
-
-  /**
-   * Dispatches a payload to all registered callbacks.
-   *
-   * @param {object} payload
-   */
-  Dispatcher.prototype.dispatch=function(payload) {
-    invariant(
-      !this.$Dispatcher_isDispatching,
-      'Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch.'
-    );
-    this.$Dispatcher_startDispatching(payload);
-    try {
-      for (var id in this.$Dispatcher_callbacks) {
-        if (this.$Dispatcher_isPending[id]) {
-          continue;
-        }
-        this.$Dispatcher_invokeCallback(id);
-      }
-    } finally {
-      this.$Dispatcher_stopDispatching();
-    }
-  };
-
-  /**
-   * Is this Dispatcher currently dispatching.
-   *
-   * @return {boolean}
-   */
-  Dispatcher.prototype.isDispatching=function() {
-    return this.$Dispatcher_isDispatching;
-  };
-
-  /**
-   * Call the callback stored with the given id. Also do some internal
-   * bookkeeping.
-   *
-   * @param {string} id
-   * @internal
-   */
-  Dispatcher.prototype.$Dispatcher_invokeCallback=function(id) {
-    this.$Dispatcher_isPending[id] = true;
-    this.$Dispatcher_callbacks[id](this.$Dispatcher_pendingPayload);
-    this.$Dispatcher_isHandled[id] = true;
-  };
-
-  /**
-   * Set up bookkeeping needed when dispatching.
-   *
-   * @param {object} payload
-   * @internal
-   */
-  Dispatcher.prototype.$Dispatcher_startDispatching=function(payload) {
-    for (var id in this.$Dispatcher_callbacks) {
-      this.$Dispatcher_isPending[id] = false;
-      this.$Dispatcher_isHandled[id] = false;
-    }
-    this.$Dispatcher_pendingPayload = payload;
-    this.$Dispatcher_isDispatching = true;
-  };
-
-  /**
-   * Clear bookkeeping used for dispatching.
-   *
-   * @internal
-   */
-  Dispatcher.prototype.$Dispatcher_stopDispatching=function() {
-    this.$Dispatcher_pendingPayload = null;
-    this.$Dispatcher_isDispatching = false;
-  };
-
-
-module.exports = Dispatcher;
-
-},{"./invariant":22}],22:[function(require,module,exports){
-/**
- * Copyright (c) 2014, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule invariant
- */
-
-"use strict";
-
-/**
- * Use invariant() to assert state which your program assumes to be true.
- *
- * Provide sprintf-style format (only %s is supported) and arguments
- * to provide information about what broke and what you were
- * expecting.
- *
- * The invariant message will be stripped in production, but the invariant
- * will remain to ensure logic does not differ in production.
- */
-
-var invariant = function(condition, format, a, b, c, d, e, f) {
-  if (false) {
-    if (format === undefined) {
-      throw new Error('invariant requires an error message argument');
-    }
-  }
-
-  if (!condition) {
-    var error;
-    if (format === undefined) {
-      error = new Error(
-        'Minified exception occurred; use the non-minified dev environment ' +
-        'for the full error message and additional helpful warnings.'
-      );
-    } else {
-      var args = [a, b, c, d, e, f];
-      var argIndex = 0;
-      error = new Error(
-        'Invariant Violation: ' +
-        format.replace(/%s/g, function() { return args[argIndex++]; })
-      );
-    }
-
-    error.framesToPop = 1; // we don't care about invariant's own frame
-    throw error;
-  }
-};
-
-module.exports = invariant;
-
-},{}],23:[function(require,module,exports){
+},{"jquery":21,"underscore":22}],21:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.1.4
  * http://jquery.com/
@@ -12047,7 +11810,7 @@ return jQuery;
 
 }));
 
-},{}],24:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors

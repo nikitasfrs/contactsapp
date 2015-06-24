@@ -1371,7 +1371,6 @@ aside #clearCreateForm {
   padding-left: 15px;
   padding-right: 15px;
   position: relative;
-  height: 500px;
 }
 @media (min-width: 992px) {
   .contacts {
@@ -1379,7 +1378,11 @@ aside #clearCreateForm {
     width: 41.66666667%;
   }
 }
-.contacts > .wait, .contacts > .error {
+.contacts #contacts-container {
+  position: relative;
+  height: 500px;
+}
+.contacts .wait, .contacts .error {
   width: 250px;
   position: relative;
   margin-left: -5%;

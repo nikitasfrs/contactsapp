@@ -1,26 +1,35 @@
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    _ = require('underscore');
+    _ = require('underscore'),
+    contactsContainerTmpl = require('../templates/contactsContainer.html');
 
 'use strict';
 
 var ContactsAppView = Backbone.View.extend({
 
-   template:null,
+   template: contactsContainerTmpl,
 
    initialize: function(options) {
        this.contactsListView = options.contactsListView
-       this.contactsResultView = options.contactsResultView;
+       this.contactsPageControlView = options.contactsPageControlView;
        this.contactCreateFormView = options.contactCreateFormView;
-       this.$contacts=$('.contacts');
+
+       this.eventbus = options.eventbus;
    },
 
+
    render: function() {
+       this.$el.html(this.template());
 
-       this.$contacts.html = this.contactsListView.prerender().el;
-       this.$('.create-area').append(this.contactCreateFormView.render().el);
+       this.contactsListView.setElement(
+           this.$('#contacts-container')).wait();
 
-       this.$el.show();
+       this.contactsPageControlView.setElement(
+            this.$('#contacts-pages')).render(); 
+
+        this.contactCreateFormView.setElement(
+            this.$('.create-area')).render();
+
        return this;
    }
 });
