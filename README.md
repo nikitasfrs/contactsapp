@@ -10,7 +10,7 @@ Contact manager SPA implementation using Backbone.js, bootstrap-sass.
 
 ### Installation
 ```
-npm install -g grunt browerify json-server
+npm install -g grunt browserify json-server 
 npm install
 grunt browserify
 ```
