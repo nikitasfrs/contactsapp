@@ -1,16 +1,18 @@
 # Contact manager app
 
-Basic contact manager SPA implementation using Backbone.js, RequireJS and bootstrap-sass.
+Contact manager SPA implementation using Backbone.js, bootstrap-sass.
 
 ### Features
 - Create, Read, Update, Delete contacts.
 - Load and error state handling.
+- Decoupled components using a central event-bus.
+- Written in CommonJS modules.
 
-### Install
+### Installation
 ```
-npm install -g json-server
+npm install -g grunt json-server
 npm install
-bower install 
+grunt browserify
 ```
 
 To generate and serve mock API just type:
