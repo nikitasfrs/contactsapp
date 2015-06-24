@@ -290,7 +290,7 @@ var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
-__p+='<aside><div class="create-area"></div><div class="about"><h2>About</h2><p>Built with <a href="http://backbonejs.org/">Backbone.js</a>, <a href="http://requirejs.org/">RequireJS</a> and <a href="https://github.com/twbs/bootstrap-sass">bootstrap-sass</a>.</p><p>by <a href="http://nikitasfr.com">Nikitas Frantzeskakis</a></p></div></aside><section class="contacts"><div id="contacts-container"></div><div id="contacts-pages"></div></section>';
+__p+='<aside><div class="create-area"></div><div class="about"><h2>About</h2><p>Built with <a href="http://backbonejs.org/">Backbone.js</a>, <a href="http://browserify.org/">browserify</a> and <a href="https://github.com/twbs/bootstrap-sass">bootstrap-sass</a>.</p><p>by <a href="http://nikitasfr.com">Nikitas Frantzeskakis</a></p></div></aside><section class="contacts"><div id="contacts-container"></div><div id="contacts-pages"></div></section>';
 }
 return __p;
 };
