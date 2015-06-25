@@ -17,7 +17,7 @@ _.extend(AppController.prototype, Backbone.Events, {
     initialize: function (options) {
 
         this.eventbus = options.eventbus;
-        this.listenTo(this.eventbus, 'page:change', this.pageChanged);
+        this.listenTo(this.eventbus, 'page:change', this.changePage);
 
 
         this.contactPageModel = new ContactPageModel({
@@ -54,14 +54,14 @@ _.extend(AppController.prototype, Backbone.Events, {
         });
     },
 
-    pageChanged: function (pageModel) {
+    changePage: function (pageModel) {
         this.contactsPaginatedCollection.fetch({
             reset:true,
             pageModel:pageModel
         });
     },
 
-    pageAction: function(page) {
+    setupPageAction: function(page) {
         var page = page || 0; 
         this.contactsAppView.render();
 

@@ -6,7 +6,7 @@ var AppRouter = Backbone.Router.extend({
     initialize: function (options) {
         this.appController = options.appController; 
         this.eventbus = options.eventbus;
-        this.listenTo(this.eventbus, "page:change", this.pageChanged);
+        this.listenTo(this.eventbus, "page:change", this.changePage);
 
     },
 
@@ -14,15 +14,16 @@ var AppRouter = Backbone.Router.extend({
         "page/:page":"pageRoute",
         "*path": "defaultRoute"
     },
+
     pageRoute:function(pageNum) {
-        this.appController.pageAction(pageNum);
+        this.appController.setupPageAction(pageNum);
     },
 
     defaultRoute: function () {
-        this.appController.pageAction();
+        this.appController.setupPageAction();
     },
 
-    pageChanged: function(pageModel) {
+    changePage: function(pageModel) {
         this.navigate('page/' + pageModel.get('current'));
     }
 
