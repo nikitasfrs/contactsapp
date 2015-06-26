@@ -5,7 +5,7 @@ var Backbone = require('backbone'),
     ContactsAppView = require('../views/contactsApp'),
     ContactCreateFormView = require('../views/contactCreateForm'),
     ContactsPaginatedCollection = require('../collections/contactsPaginated'),
-    ContactPageModel = require('../models/page'),
+    PageModel = require('../models/page'),
     ContactsPageControlView = require('../views/contactsPageControl');
 
 var AppController = function(options){
@@ -20,17 +20,17 @@ _.extend(AppController.prototype, Backbone.Events, {
         this.listenTo(this.eventbus, 'page:change', this.changePage);
 
 
-        this.contactPageModel = new ContactPageModel({
+        this.pageModel = new PageModel({
             eventbus:this.eventbus
         });
 
         this.contactsPaginatedCollection = new ContactsPaginatedCollection({
-            defaultPageModel: this.contactPageModel,
+            defaultPageModel: this.pageModel,
             eventbus:this.eventbus
         }); 
 
         this.contactsPageControlView = new ContactsPageControlView({
-            model: this.contactPageModel,
+            model: this.pageModel,
             eventbus:this.eventbus
         });
         
@@ -63,31 +63,34 @@ _.extend(AppController.prototype, Backbone.Events, {
 
     setupPageAction: function(page) {
         var page = page || 0; 
-        this.contactsAppView.render();
 
-        function createPageModel (data) {
-            this.contactPageModel.set({
+        var createPageModel = _.bind(function(data) {
+            this.pageModel.set({
                 total: data.total,
                 items: data.items,
                 current: parseInt(page)
             });
-        }
-        function fetchCollection(data) {
+        }, this)
+        
+        var fetchCollection = _.bind(function(data) {
             this.contactsPaginatedCollection.fetch({
                 reset:true,
-                pageModel:this.contactPageModel
+                pageModel:this.pageModel
             });
-        }
-        function showError() {
+        },this);
+
+        var showError = _.bind(function() {
             this.contactsListView.onError();
-        }
+        },this);
+
+        this.contactsAppView.render();
 
         $.ajax({
             url: "http://127.0.0.1:3000/pages",
-            success: _.bind(createPageModel, this)
-        }
-        ).then(_.bind(fetchCollection, this)
-        ).fail(_.bind(showError, this));
+            success: createPageModel
+        })
+        .then(fetchCollection)
+        .fail(showError);
 
     }
 });
