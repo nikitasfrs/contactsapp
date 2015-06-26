@@ -12,8 +12,6 @@ var ContactsListView = Backbone.View.extend({
 
     initialize: function(options) {
 
-        this.contactsPageControlView = options.contactsPageControlView;
-
         this.waitView = new WaitView();
         this.views = [];
 

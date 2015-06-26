@@ -19,7 +19,6 @@ _.extend(AppController.prototype, Backbone.Events, {
         this.eventbus = options.eventbus;
         this.listenTo(this.eventbus, 'page:change', this.fetchPage);
 
-
         this.pageModel = new PageModel({
             eventbus:this.eventbus
         });
@@ -35,7 +34,6 @@ _.extend(AppController.prototype, Backbone.Events, {
         });
         
         this.contactsListView = new ContactsListView({
-            pageControlView: this.pageControlView,
             collection: this.contactsPaginatedCollection,
             eventbus:this.eventbus
         });
