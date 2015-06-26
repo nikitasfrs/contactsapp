@@ -3,12 +3,12 @@ var $ = require('jquery'),
     _ = require('underscore'),
     ContactView = require('./contact'),
     WaitView = require('./waitView'),
-    contactsContainerTmp = require('../templates/contactsListContainer.html');
+    contactsListContainerTmp = require('../templates/contactsListContainer.html');
 
     'use strict';
 
 var ContactsListView = Backbone.View.extend({
-    template: contactsContainerTmp,
+    template: contactsListContainerTmp,
 
     initialize: function(options) {
 
