@@ -5,7 +5,7 @@ var Backbone = require('backbone'),
     ContactsAppView = require('../views/contactsApp'),
     ContactCreateFormView = require('../views/contactCreateForm'),
     ContactsPaginatedCollection = require('../collections/contactsPaginated'),
-    ContactPageModel = require('../models/contactPage'),
+    ContactPageModel = require('../models/page'),
     ContactsPageControlView = require('../views/contactsPageControl');
 
 var AppController = function(options){

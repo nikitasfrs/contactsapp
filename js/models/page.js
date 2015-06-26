@@ -3,7 +3,7 @@ var Backbone = require('backbone'),
 
     'use strict';
 
-var ContactPage = Backbone.Model.extend({
+var PageModel = Backbone.Model.extend({
 
     defaults: {
         total: 0,
@@ -18,4 +18,4 @@ var ContactPage = Backbone.Model.extend({
     //toJSON: function() {}
 });
 
-module.exports = ContactPage;
+module.exports = PageModel;
