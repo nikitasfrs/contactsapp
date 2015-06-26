@@ -6,7 +6,7 @@ var Backbone = require('backbone'),
     ContactCreateFormView = require('../views/contactCreateForm'),
     ContactsPaginatedCollection = require('../collections/contactsPaginated'),
     PageModel = require('../models/page'),
-    ContactsPageControlView = require('../views/contactsPageControl');
+    PageControlView = require('../views/pageControl');
 
 var AppController = function(options){
     this.initialize.apply(this, arguments);
@@ -17,7 +17,7 @@ _.extend(AppController.prototype, Backbone.Events, {
     initialize: function (options) {
 
         this.eventbus = options.eventbus;
-        this.listenTo(this.eventbus, 'page:change', this.changePage);
+        this.listenTo(this.eventbus, 'page:change', this.fetchPage);
 
 
         this.pageModel = new PageModel({
@@ -29,13 +29,13 @@ _.extend(AppController.prototype, Backbone.Events, {
             eventbus:this.eventbus
         }); 
 
-        this.contactsPageControlView = new ContactsPageControlView({
+        this.pageControlView = new PageControlView({
             model: this.pageModel,
             eventbus:this.eventbus
         });
         
         this.contactsListView = new ContactsListView({
-            contactsPageControlView: this.contactsPageControlView,
+            pageControlView: this.pageControlView,
             collection: this.contactsPaginatedCollection,
             eventbus:this.eventbus
         });
@@ -48,13 +48,13 @@ _.extend(AppController.prototype, Backbone.Events, {
         this.contactsAppView = new ContactsAppView({
             el: '#contacts-app',
             contactsListView: this.contactsListView,
-            contactsPageControlView: this.contactsPageControlView,
+            pageControlView: this.pageControlView,
             contactCreateFormView: this.contactCreateFormView,
             eventbus:this.eventbus
         });
     },
 
-    changePage: function (pageModel) {
+    fetchPage: function (pageModel) {
         this.contactsPaginatedCollection.fetch({
             reset:true,
             pageModel:pageModel
@@ -72,11 +72,8 @@ _.extend(AppController.prototype, Backbone.Events, {
             });
         }, this)
         
-        var fetchCollection = _.bind(function(data) {
-            this.contactsPaginatedCollection.fetch({
-                reset:true,
-                pageModel:this.pageModel
-            });
+        var fetchPage = _.bind(function(data) {
+            this.fetchPage(this.pageModel);
         },this);
 
         var showError = _.bind(function() {
@@ -89,7 +86,7 @@ _.extend(AppController.prototype, Backbone.Events, {
             url: "http://127.0.0.1:3000/pages",
             success: createPageModel
         })
-        .then(fetchCollection)
+        .then(fetchPage)
         .fail(showError);
 
     }

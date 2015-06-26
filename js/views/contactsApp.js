@@ -11,7 +11,7 @@ var ContactsAppView = Backbone.View.extend({
 
    initialize: function(options) {
        this.contactsListView = options.contactsListView
-       this.contactsPageControlView = options.contactsPageControlView;
+       this.pageControlView = options.pageControlView;
        this.contactCreateFormView = options.contactCreateFormView;
 
        this.eventbus = options.eventbus;
@@ -24,7 +24,7 @@ var ContactsAppView = Backbone.View.extend({
        this.contactsListView.setElement(
            this.$('#contacts-container')).wait();
 
-       this.contactsPageControlView.setElement(
+       this.pageControlView.setElement(
             this.$('#contacts-pages')).render(); 
 
         this.contactCreateFormView.setElement(

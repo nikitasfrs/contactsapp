@@ -1,15 +1,13 @@
 var $ = require('jquery'),
     Backbone = require('backbone'),
     _ = require('underscore'),
-    contactsPagesTmp = require('../templates/contactsPages.html');
+    pagesTmp = require('../templates/pages.html');
    
 'use strict';
-// 
-// NOTE: This is a child view of contactList
-//
-var ContactsPageControlView = Backbone.View.extend({
 
-    template: contactsPagesTmp, 
+var PageControlView = Backbone.View.extend({
+
+    template: pagesTmp, 
 
     initialize: function(options) {
         this.eventbus = options.eventbus;
@@ -82,4 +80,4 @@ var ContactsPageControlView = Backbone.View.extend({
     }
 });
 
-module.exports = ContactsPageControlView;
+module.exports = PageControlView;
