@@ -30,16 +30,11 @@ module.exports = function(grunt) {
                 files: 'sass/{,*/}*.{scss,sass}',
                 tasks: ['sass:dev']
             },
-            browserify: {
-                files: ['js/**'],
-                tasks: ['browserify']
-            },
 
-            mochaTest: {
+            js: {
                 files: ['js/**'],
-                tasks: ['mochaTest']
+                tasks: ['mochaTest', 'browserify']
             }
-
         },
 
         browserify: {

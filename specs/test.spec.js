@@ -17,7 +17,7 @@ describe('ContactsCollection', function(){
     })
 
     describe('#_getRequestUrl()', function() {
-        it('should return url with params 0 .. 5', function(){
+        it('should generate url params 0 .. 5', function(){
            assert.equal(contactsCollection._getRequestUrl('', pageModel), '?_start=0&_end=5'); 
         })
     })
