@@ -40,17 +40,24 @@ var ContactsPaginatedCollection = Backbone.Collection.extend({
     
     sync: function(method, model, options) {
         
-       var contactPageModel = options.pages || this.defaultPageModel, 
-           items = contactPageModel.get('items'),
-           page = contactPageModel.get('current'),
-           start = page * items,
-           end = start + items;
-
-       options.url = this.url + '?_start='+ parseInt(start) + '&_end=' + parseInt(end);
-
+       var pageModel = options.pages || this.defaultPageModel; 
+       
+       options.url = this._getRequestUrl(this.url, pageModel);
+       
        Backbone.sync.apply(this, arguments);
 
     },
+
+    _getRequestUrl: function(baseUrl, pageModel){
+        var items = pageModel.get('items'),
+            page = pageModel.get('current'),
+            start = page * items,
+            end = start + items;
+
+        var url = baseUrl + '?_start='+ parseInt(start) + '&_end=' + parseInt(end);
+
+        return url;
+    }
 
 
 
