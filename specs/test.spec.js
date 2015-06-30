@@ -1,16 +1,5 @@
-var assert = require('chai').assert
 var ContactsCollection = require('../js/collections/contactsPaginated');
-
 var PageModel = require('../js/models/page');
-
-describe('Array', function(){
-  describe('#indexOf()', function(){
-    it('should return -1 when the value is not present', function(){
-      assert.equal(-1, [1,2,3].indexOf(5));
-      assert.equal(-1, [1,2,3].indexOf(0));
-    })
-  })
-})
 
 describe('ContactsCollection', function(){
     var pageModel, contactsCollection;

@@ -33,7 +33,13 @@ module.exports = function(grunt) {
             browserify: {
                 files: ['js/**'],
                 tasks: ['browserify']
+            },
+
+            mochaTest: {
+                files: ['js/**'],
+                tasks: ['mochaTest']
             }
+
         },
 
         browserify: {
@@ -44,16 +50,33 @@ module.exports = function(grunt) {
             options: {
                 transform: ['jstify']
             }
+        },
+
+        mochaTest: {
+            specs: {
+                options: {
+                    ui: 'bdd',
+                    reporter: 'spec',
+                    require: './specs/helpers/chai'
+                },
+                src: ['specs/**/*.spec.js']
+            }
         }
+ 
     });
 
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-browserify');
+    grunt.loadNpmTasks('grunt-mocha-test');
 
     grunt.registerTask('default', [
         'watch',
         'browserify'
+    ]);
+
+    grunt.registerTask('mocha', [
+        'mochaTest'
     ]);
 
 };
