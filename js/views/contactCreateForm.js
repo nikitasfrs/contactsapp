@@ -53,4 +53,6 @@ var ContactCreateFormView = Backbone.View.extend({
 
 });
 
-module.exports = ContactCreateFormView;
+module.exports = function createModule(opt) {
+    return new ContactCreateFormView(opt);
+}

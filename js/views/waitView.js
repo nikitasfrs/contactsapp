@@ -15,5 +15,7 @@ var WaitView = Backbone.View.extend({
    }
 });
 
-module.exports = WaitView;
+module.exports = function createModule(opt){
+    return new WaitView(opt);
+}
         

@@ -1,7 +1,7 @@
 var $ = require('jquery'),
     Backbone = require('backbone'),
     _ = require('underscore'),
-    ContactView = require('./contact'),
+    //ContactView = require('./contact'),
     WaitView = require('./waitView'),
     contactsListContainerTmp = require('../templates/contactsListContainer.html');
 
@@ -61,7 +61,10 @@ var ContactsListView = Backbone.View.extend({
     addNew: function(contact) {
 
         // keep track of children
-        var view = new ContactView({ model: contact });
+        var view = require('./contact')({
+            model: contact 
+        });
+
         this.views.push(view);
 
         this.$('#contacts-list').prepend(view.render().el);
@@ -79,5 +82,7 @@ var ContactsListView = Backbone.View.extend({
     }
 });
 
-module.exports = ContactsListView;
+module.exports = function createModule(opt) {
+    return new ContactsListView(opt);
+}
 

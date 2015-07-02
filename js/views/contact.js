@@ -78,5 +78,7 @@ var ContactView = Backbone.View.extend({
 
 });
 
-module.exports = ContactView;
+module.exports = function createModule(opt){
+    return new ContactView(opt);
+}
 

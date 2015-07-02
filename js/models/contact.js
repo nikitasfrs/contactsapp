@@ -21,4 +21,6 @@ var Contact = Backbone.Model.extend({
     //toJSON: function() {}
 });
 
-module.exports = Contact;
+module.exports = function createModule(opt) {
+    return new Contact(opt);
+}

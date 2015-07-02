@@ -18,4 +18,6 @@ var PageModel = Backbone.Model.extend({
     //toJSON: function() {}
 });
 
-module.exports = PageModel;
+module.exports = function createModule(opt) {
+    return new PageModel(opt);
+}

@@ -34,6 +34,8 @@ var ContactsAppView = Backbone.View.extend({
    }
 });
 
-module.exports = ContactsAppView;
+module.exports = function createModule(opt){
+    return new ContactsAppView(opt);
+}
 
    

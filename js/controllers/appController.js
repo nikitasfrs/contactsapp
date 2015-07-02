@@ -1,13 +1,7 @@
 var Backbone = require('backbone'),
     $ = require('jquery'),
-    _ = require('underscore'),
-    ContactsListView = require('../views/contactsList'),
-    ContactsAppView = require('../views/contactsApp'),
-    ContactCreateFormView = require('../views/contactCreateForm'),
-    ContactsPaginatedCollection = require('../collections/contactsPaginated'),
-    PageModel = require('../models/page'),
-    PageControlView = require('../views/pageControl');
-
+    _ = require('underscore')
+    
 var AppController = function(options){
     this.initialize.apply(this, arguments);
 };
@@ -19,31 +13,31 @@ _.extend(AppController.prototype, Backbone.Events, {
         this.eventbus = options.eventbus;
         this.listenTo(this.eventbus, 'page:change', this.fetchPage);
 
-        this.pageModel = new PageModel({
+        this.pageModel = require('../models/page')({
             eventbus:this.eventbus
         });
 
-        this.contactsPaginatedCollection = new ContactsPaginatedCollection({
+        this.contactsPaginatedCollection =  require('../collections/contactsPaginated')({
             defaultPageModel: this.pageModel,
             eventbus:this.eventbus
         }); 
 
-        this.pageControlView = new PageControlView({
+        this.pageControlView = require('../views/pageControl')({
             model: this.pageModel,
             eventbus:this.eventbus
         });
         
-        this.contactsListView = new ContactsListView({
+        this.contactsListView =  require('../views/contactsList')({
             collection: this.contactsPaginatedCollection,
             eventbus:this.eventbus
         });
 
-        this.contactCreateFormView = new ContactCreateFormView({
+        this.contactCreateFormView = require('../views/contactCreateForm')({
             //router:router,
             eventbus:this.eventbus
         });
         
-        this.contactsAppView = new ContactsAppView({
+        this.contactsAppView = require('../views/contactsApp')({
             el: '#contacts-app',
             contactsListView: this.contactsListView,
             pageControlView: this.pageControlView,
@@ -91,4 +85,6 @@ _.extend(AppController.prototype, Backbone.Events, {
 });
 
 
-module.exports = AppController;
+module.exports = function createModule(opt) {
+    return new AppController(opt);
+}

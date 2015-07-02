@@ -1,4 +1,4 @@
-var ContactsCollection = require('../js/collections/contactsPaginated');
+//var ContactsCollection = require('../js/collections/contactsPaginated');
 var PageModel = require('../js/models/page');
 
 describe('ContactsCollection', function(){
@@ -11,9 +11,12 @@ describe('ContactsCollection', function(){
             current: 0,
             items: 5
         });
-        contactsCollection = new ContactsCollection({
-            defaultPageModel: pageModel    
+        contactsCollection = require('../js/collections/contactsPaginated')({
+            defaultPageModel:pageModel
         });
+        /*contactsCollection = new ContactsCollection({
+            defaultPageModel: pageModel    
+        });*/
     })
 
     describe('#_getRequestUrl()', function() {

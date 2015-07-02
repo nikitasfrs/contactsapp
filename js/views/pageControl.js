@@ -80,4 +80,6 @@ var PageControlView = Backbone.View.extend({
     }
 });
 
-module.exports = PageControlView;
+module.exports = function createModule(opt) {
+    return new PageControlView(opt);
+}
