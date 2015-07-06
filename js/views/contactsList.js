@@ -1,7 +1,6 @@
 var $ = require('jquery'),
     Backbone = require('backbone'),
     _ = require('underscore'),
-    //ContactView = require('./contact'),
     WaitView = require('./waitView'),
     contactsListContainerTmp = require('../templates/contactsListContainer.html');
 

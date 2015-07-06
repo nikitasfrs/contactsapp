@@ -18,11 +18,11 @@ var ContactsPaginatedCollection = Backbone.Collection.extend({
         
     },
 
-    create: function (model, options) {
+    create: function (attributes, options) {
         // implement model processing logic
         var items = this.where({
-            firstName: model.firstName,
-            lastName: model.lastName
+            firstName: attributes.firstName,
+            lastName: attributes.lastName
         });
 
         if (items.length) {
@@ -30,14 +30,10 @@ var ContactsPaginatedCollection = Backbone.Collection.extend({
             this.trigger('contacts:duplicate');
             return false;
         }
-        
+
         Backbone.Collection.prototype.create.apply(this,arguments);
     },
 
-    nextOrder: function () {
-        return this.length ? this.last().get('order') + 1 : 1;
-    },
-    
     sync: function(method, model, options) {
         
        var pageModel = options.pages || this.defaultPageModel; 
@@ -58,9 +54,6 @@ var ContactsPaginatedCollection = Backbone.Collection.extend({
 
         return url;
     }
-
-
-
 });
 
 //module.exports = ContactsPaginatedCollection;

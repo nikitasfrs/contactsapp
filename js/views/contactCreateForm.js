@@ -36,14 +36,12 @@ var ContactCreateFormView = Backbone.View.extend({
 
     createNew: function(e) {
 
-        var model = new ContactModel({
+        this.eventbus.trigger('contact:create', {
             firstName: this.$firstName.val(),
             lastName: this.$lastName.val(),
             phone: this.$phone.val(),
-            email: this.$email.val()
+            email: this.$email.val()  
         });
-    
-        this.eventbus.trigger('contact:create', model);
     },
 
     clear: function(e) {

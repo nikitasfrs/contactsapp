@@ -52,7 +52,7 @@ module.exports = function(grunt) {
                 options: {
                     ui: 'bdd',
                     reporter: 'spec',
-                    require: './specs/helpers/chai'
+                    require: './specs/helpers/config'
                 },
                 src: ['specs/**/*.spec.js']
             }
