@@ -1,13 +1,15 @@
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    _ = require('underscore'),
-    pagesTmp = require('../templates/pages.html');
+    _ = require('underscore');
+
+var fs = require('fs');
+var pagesTmp = fs.readFileSync(__dirname + '/../templates/pages.html', 'utf8');
    
 'use strict';
 
 var PageControlView = Backbone.View.extend({
 
-    template: pagesTmp, 
+    template: _.template(pagesTmp), 
 
     initialize: function(options) {
         this.eventbus = options.eventbus;

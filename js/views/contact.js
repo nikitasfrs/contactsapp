@@ -1,8 +1,10 @@
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    _ = require('underscore'),
-    contactTemplate = require('../templates/contact.html'),
-    editContactTemplate = require('../templates/editContact.html');
+    _ = require('underscore');
+
+var fs = require('fs');
+var contactTmp = fs.readFileSync(__dirname+'/../templates/contact.html', 'utf8');
+var editContactTmp = fs.readFileSync(__dirname+'/../templates/editContact.html', 'utf8');
 
 var ContactView = Backbone.View.extend({
 
@@ -17,6 +19,9 @@ var ContactView = Backbone.View.extend({
     },
 
     initialize: function () {
+        this.contactTmp = _.template(contactTmp);
+        this.editContactTmp = _.template(editContactTmp);
+
         this.listenTo(this.model, 'destroy', this.remove);
         this.listenTo(this.model, 'request', this.onRequest);
         this.listenTo(this.model, 'sync', this.onSync);
@@ -41,7 +46,7 @@ var ContactView = Backbone.View.extend({
     },
 
     editContact: function(e) {
-       this.$el.html(editContactTemplate(this.model.toJSON())); 
+       this.$el.html(this.editContactTmp(this.model.toJSON())); 
     },
 
     cancelEditing: function (e) {
@@ -62,7 +67,7 @@ var ContactView = Backbone.View.extend({
     },
         
     render: function () {
-        this.$el.html(contactTemplate(this.model.toJSON()));
+        this.$el.html(this.contactTmp(this.model.toJSON()));
         return this;
     }
 

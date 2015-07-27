@@ -1,13 +1,15 @@
 var $ = require('jquery'),
     Backbone = require('backbone'),
     _ = require('underscore'),
-    WaitView = require('./waitView'),
-    contactsListContainerTmp = require('../templates/contactsListContainer.html');
+    WaitView = require('./waitView');
+
+var fs = require('fs');
+var contactsListContainerTmp = fs.readFileSync(__dirname+'/../templates/contactsListContainer.html', 'utf8');
 
     'use strict';
 
 var ContactsListView = Backbone.View.extend({
-    template: contactsListContainerTmp,
+    template: _.template(contactsListContainerTmp),
 
     initialize: function(options) {
 

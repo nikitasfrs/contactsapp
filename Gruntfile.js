@@ -43,7 +43,7 @@ module.exports = function(grunt) {
                 dest: 'dist-js/main-build.js',
             },
             options: {
-                transform: ['jstify']
+                transform: ['brfs']
             }
         },
 

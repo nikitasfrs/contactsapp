@@ -1,7 +1,9 @@
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    _ = require('underscore'),
-    waitTemplate = require('../templates/wait.html');
+    _ = require('underscore');
+
+var fs = require('fs');
+var waitTemplate = fs.readFileSync(__dirname + '/../templates/wait.html', 'utf8');
 
 'use strict';
 

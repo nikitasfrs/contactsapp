@@ -2,9 +2,11 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     _ = require('underscore'),
     ContactView = require('./contact'),
-    contactCreateFormTmp = require('../templates/contactCreateForm.html'),
     ContactModel = require('../models/contact');
    
+var fs = require('fs');
+var contactCreateFormTmp = fs.readFileSync(__dirname + '/../templates/contactCreateForm.html', 'utf8');
+
 'use strict';
 
 var ContactCreateFormView = Backbone.View.extend({
