@@ -11,6 +11,10 @@ var Contact = Backbone.Model.extend({
         email: ""
     },
 
+    initialize: function(opt) {
+        this.urlRoot='http://127.0.0.1:3000/contacts';
+    },
+
     validate: function (attrs, options) {
         if (!attrs.firstName || !attrs.lastName) {
             return "First name and Last name fields cannot be empty."

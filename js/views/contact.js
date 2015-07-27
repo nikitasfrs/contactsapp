@@ -6,9 +6,6 @@ var $ = require('jquery'),
 
 var ContactView = Backbone.View.extend({
 
-    /*template: _.template(contactTemplate),
-    editTemplate: _.template(editContactTemplate),*/
-
     tagName: 'div',
     className: 'contact',
 
@@ -20,20 +17,14 @@ var ContactView = Backbone.View.extend({
     },
 
     initialize: function () {
-        // view will follow model
         this.listenTo(this.model, 'destroy', this.remove);
-        //this.listenTo(this.model, 'change', this.render);
-
         this.listenTo(this.model, 'request', this.onRequest);
         this.listenTo(this.model, 'sync', this.onSync);
-        //this.listenTo(this.model, 'error', this.onError);
 
     },
 
     onRequest: function() {
-        // wait--loading view
         this.$el.html("Loading please wait..."); 
-
     },
 
     onSync: function () {
@@ -42,7 +33,6 @@ var ContactView = Backbone.View.extend({
     },
 
     onError: function () {
-        //this.trigger('contact:error');
         this.$el.html("error");
     },
 

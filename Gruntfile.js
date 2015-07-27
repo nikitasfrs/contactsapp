@@ -57,7 +57,6 @@ module.exports = function(grunt) {
                 src: ['specs/**/*.spec.js']
             }
         }
- 
     });
 
     grunt.loadNpmTasks('grunt-contrib-sass');
