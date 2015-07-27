@@ -2,7 +2,7 @@
   "name": "contactsapp",
   "version": "1.0.0",
   "description": "Contact manager implementation using Backbone.js, browserify and bootstrap-sass.",
-  "main": "Gruntfile.js",
+  "main": "js/main.js",
   "dependencies": {
     "backbone": "^1.2.1",
     "faker": "^2.1.4",
