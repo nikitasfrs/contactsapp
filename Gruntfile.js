@@ -33,8 +33,13 @@ module.exports = function(grunt) {
 
             js: {
                 files: ['js/**'],
-                tasks: ['mochaTest', 'browserify']
-            }
+                tasks: ['browserify']
+            },
+
+            karma: { 
+                files: ['js/**/*.js', 'specs/**/*.spec.js'],
+                tasks: ['karma:unit:run']
+            },
         },
 
         browserify: {
@@ -44,6 +49,14 @@ module.exports = function(grunt) {
             },
             options: {
                 transform: ['brfs']
+            }
+        },
+
+        karma: {
+            unit: {
+                configFile: 'karma.conf.js',
+                background: true,
+                singleRun: false
             }
         },
 
@@ -63,6 +76,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-mocha-test');
+    grunt.loadNpmTasks('grunt-karma');
 
     grunt.registerTask('default', [
         'watch',
@@ -71,6 +85,10 @@ module.exports = function(grunt) {
 
     grunt.registerTask('mocha', [
         'mochaTest'
+    ]);
+
+    grunt.registerTask('serve', [
+        'karma:unit:start', 'watch'
     ]);
 
 };
