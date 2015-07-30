@@ -56,7 +56,7 @@ module.exports = function(grunt) {
             unit: {
                 configFile: 'karma.conf.js',
                 background: true,
-                singleRun: false
+                autoWatch: false
             }
         },
 
@@ -87,8 +87,12 @@ module.exports = function(grunt) {
         'mochaTest'
     ]);
 
-    grunt.registerTask('serve', [
+    /*grunt.registerTask('serve', [
         'karma:unit:start', 'watch'
+    ]);*/
+
+    grunt.registerTask('serve', [
+        'watch'
     ]);
 
 };

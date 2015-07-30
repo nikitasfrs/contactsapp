@@ -1,24 +1,36 @@
 describe('contactView', function() {
-    var contactView;
+    var contactView
+      , contactModel;
     
     before(function(){
-        contactView = require('../js/views/contact')();
+
+        contactModel = require('../js/models/contact')()
+        contactView = require('../js/views/contact')({
+            model: contactModel
+        });
     })
 
     describe('#onSync', function(){
-        it('should trigger contact:change and call render', function(){
+        it('should emit \'contact:change\' and call render', function(){
             var triggerspy = sinon.spy(contactView, 'trigger');
             var renderspy = sinon.spy(contactView,'render'); 
-            //assert.isTrue(false);
+            contactView.onSync();
+
+            assert.isTrue(triggerspy.calledWith('contact:change'));
+            assert.isTrue(renderspy.called)
 
             //assert.isTrue(false);
-            /*contactView.onSync();
+            contactView.trigger.restore(); 
+        })
+    })
 
-            assertTrue(triggerspy.calledWith('contact:change'));
-            assertTrue(renderspy.called)
+    describe('#removeContact', function() {
+        it('should destroy model', function() {
+            var modelspy = sinon.spy(contactView.model, 'destroy');
+            contactView.removeContact();
+            assert.isTrue(modelspy.called);
 
-            contactView.trigger.restore(); */
-
+            contactView.model = contactModel;
         })
     })
 
