@@ -1,5 +1,6 @@
 var chai = require('chai');
 var sinon = require('sinon');
+require('./testdom')('<html><body></body></html>');
 
 global.$ = require('jquery');
 global.$.ajax = function() { return true; }
