@@ -74,7 +74,7 @@ _.extend(AppController.prototype, Backbone.Events, {
 
         this.contactsAppView.render();
 
-        $.ajax({
+        return $.ajax({
             url: "http://127.0.0.1:3000/pages",
             success: createPageModel
         })
