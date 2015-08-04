@@ -35,6 +35,11 @@ module.exports = function(grunt) {
                 files: ['js/**'],
                 tasks: ['browserify', 'mochaTest']
             },
+
+            mochaTest: {
+                files: ['specs/**'],
+                tasks: ['mochaTest']
+            }
         },
 
         browserify: {

@@ -19,13 +19,12 @@ describe('contactView', function() {
             assert.isTrue(triggerspy.calledWith('contact:change'));
             assert.isTrue(renderspy.called)
 
-            //assert.isTrue(false);
             contactView.trigger.restore(); 
         })
     })
 
     describe('#removeContact', function() {
-        it('should destroy model', function() {
+        it('should destroy its associated model', function() {
             var modelspy = sinon.spy(contactView.model, 'destroy');
             contactView.removeContact();
             assert.isTrue(modelspy.called);
@@ -33,5 +32,26 @@ describe('contactView', function() {
             contactView.model = contactModel;
         })
     })
+
+    describe('#editContact', function() {
+        it('should edit element selector html', function() {
+           var spy = sinon.spy(contactView.$el, 'html');
+           contactView.editContact();
+           assert.isTrue(spy.called);
+
+           contactView.$el.html.restore();
+        })
+    })
+
+    describe('#saveContact', function() {
+        it('should set attrs and save model', function () {
+            var setSpy = sinon.spy(contactView.model, 'set');
+            var saveSpy = sinon.spy(contactView.model, 'save');
+            contactView.saveContact();
+            assert.isTrue(setSpy.called);
+            assert.isTrue(saveSpy.called);
+        })
+    })
+
 
 })
