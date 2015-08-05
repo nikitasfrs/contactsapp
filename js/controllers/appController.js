@@ -11,7 +11,7 @@ _.extend(AppController.prototype, Backbone.Events, {
     initialize: function (options) {
 
         this.eventbus = options.eventbus;
-        this.listenTo(this.eventbus, 'page:change', this.fetchPage);
+        this.listenTo(this.eventbus, 'page:change', this.fetchPageContacts);
 
         this.pageModel = require('../models/page')({
             eventbus:this.eventbus
