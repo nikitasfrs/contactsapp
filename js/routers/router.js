@@ -17,7 +17,8 @@ var AppRouter = Backbone.Router.extend({
     },
 
     pageRoute:function(pageNum) {
-        this.appController.setupPageAction(pageNum);
+        return this.appController.setupPageAction(pageNum);
+        
     },
 
     changePage: function(pageModel) {

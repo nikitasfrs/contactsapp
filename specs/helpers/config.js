@@ -3,8 +3,6 @@ var sinon = require('sinon');
 require('./testdom')('<html><body></body></html>');
 
 global.$ = require('jquery');
-global.$.ajax = function() { return true; }
-
 global.Backbone = require('backbone');
 global.Backbone.$ = global.$;
 global._ = require('underscore');
