@@ -27,12 +27,12 @@ var AppRouter = Backbone.Router.extend({
 
 });
 
-module.exports = {
-    createModule: function (opt){
-        return new AppRouter(opt);
-    },
-    getClass: function () {
-        return AppRouter
-    }
+module.exports = function (opt) {
+    return new AppRouter(opt) 
 }
+
+module.exports.getClass = function () {
+    return AppRouter;
+}
+
 

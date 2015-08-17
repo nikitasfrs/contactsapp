@@ -7,10 +7,10 @@ describe('AppController', function() {
         // alter module export pattern to include
         // a reference to the initial object and not
         // the instance as well?
-        //
-        appController = require('../js/controllers/appController').createModule({
+        
+        /*appController = require('../js/controllers/appController')({
             eventbus: vent
-        });
+        });*/
 
     });
 
