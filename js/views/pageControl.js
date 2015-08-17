@@ -17,8 +17,6 @@ var PageControlView = Backbone.View.extend({
     }, 
 
     render: function () {
-        // will get currentpage from model 
-        // and construct controls
         var items = this.generateItems();
         var tpl = ($('ul', this.template())).html(items);
         this.$el.html(tpl);
@@ -32,13 +30,9 @@ var PageControlView = Backbone.View.extend({
 
 
     goToPage: function(e) {
-
         var page = e.target.text;
         e.preventDefault();  
 
-        //this.router.navigate('page/' + page,
-        //{trigger: true, replace: true});
-        
         this.model.set({current: page});
         this.eventbus.trigger("page:change", this.model);
 
