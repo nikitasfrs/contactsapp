@@ -9,7 +9,7 @@ var appController = require('./controllers/appController')
             eventbus: vent
         });
 
-var appRouter =  require('./routers/router')({
+var appRouter =  require('./routers/router').createModule({
     appController: appController,
     eventbus: vent
 });
