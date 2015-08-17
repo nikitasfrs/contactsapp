@@ -1,9 +1,7 @@
 describe('AppController', function() {
     var appController;
-    var vent;
 
     before(function() {
-        vent = _.extend({}, Backbone.Events);
         // TODO: monkey-patch initialize to add
         // spy on fetchPageContacts 
         // alter module export pattern to include

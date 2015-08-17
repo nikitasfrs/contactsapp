@@ -1,11 +1,7 @@
 describe('Router', function () {
     var router;
-    var vent;
     var pageModel;
-    before(function () {
-        vent = _.extend({}, Backbone.Events);
-    })
-    
+
     describe('#initialize', function() {
         var spy;
         before(function () {

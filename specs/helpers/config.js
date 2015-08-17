@@ -14,3 +14,5 @@ global.AssertionError = chai.AssertionError;
 global.Assertion = chai.Assertion;
 global.assert = chai.assert;
 global.sinon = sinon;
+
+global.vent = _.extend({}, Backbone.Events);
