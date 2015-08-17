@@ -85,6 +85,11 @@ _.extend(AppController.prototype, Backbone.Events, {
 });
 
 
-module.exports = function createModule(opt) {
-    return new AppController(opt);
-}
+module.exports = {
+    createModule: function(opt) {
+        return new AppController(opt);
+    },
+    getClass: function() {
+        return AppController;
+    }
+}   
