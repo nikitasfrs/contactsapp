@@ -1,19 +1,6 @@
 describe('AppController', function() {
     var appController;
 
-    before(function() {
-        // TODO: monkey-patch initialize to add
-        // spy on fetchPageContacts 
-        // alter module export pattern to include
-        // a reference to the initial object and not
-        // the instance as well?
-        
-        /*appController = require('../js/controllers/appController')({
-            eventbus: vent
-        });*/
-
-    });
-
     describe('#initialize', function() {
         var spy;
 
