@@ -18,7 +18,6 @@ _.extend(AppController.prototype, Backbone.Events, {
         });
 
         this.contactsPaginatedCollection =  require('../collections/contactsPaginated')({
-            defaultPageModel: this.pageModel,
             eventbus:this.eventbus
         }); 
 
