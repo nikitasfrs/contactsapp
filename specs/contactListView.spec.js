@@ -25,8 +25,6 @@ describe('ContactListView', function () {
             eventbus:vent
         })
     
-        // testing model -- collection -- view
-        // interaction here
         model = require('../js/models/contact')({
             firstName: 'foo'
         });
@@ -88,7 +86,6 @@ describe('ContactListView', function () {
            assert.isTrue(errorSpy.getCall(1).args[0] === model);
            assert.isFalse(triggerSpy.calledWith('fetch:error'));
         })
-
     })
 
     describe('#addNew', function () {
