@@ -1,19 +1,34 @@
 describe('AppController', function() {
     var appController;
+    var pageModel;
 
     describe('#initialize', function() {
-        var spy;
+        var stub;
 
         before(function() {
+            var proto;
+
+            pageModel = require('../js/models/page')({
+                eventbus: vent
+            })
+            pageModel.set({
+                total: 1,
+                items: 1,
+                current: 1
+            })
+
             AppController = require('../js/controllers/appController').getClass();
-            var init = AppController.prototype.initialize;
+            proto = AppController.prototype;
+            stub = sinon.stub(proto, 'fetchPageContacts');
+
+            /*var init = AppController.prototype.initialize;
             AppController.prototype.initialize = function(options) {
                 
                 // spy should be set here before event
                 // binding to get proper function
-                spy = sinon.spy(this,'fetchPageContacts');
+                stub = sinon.stub(this,'fetchPageContacts');
                 init.apply(this, arguments);
-            }
+            }*/
 
             appController = new AppController ({
                 eventbus: vent
@@ -22,7 +37,7 @@ describe('AppController', function() {
 
         it('should call fetchPageContacts() on "page:change" event', function() {
             vent.trigger('page:change');
-            assert.isTrue(spy.called);            
+            assert.isTrue(stub.called);            
         })
 
         after(function() {
@@ -35,7 +50,7 @@ describe('AppController', function() {
         it('should fetch contacts', function() {
 
             var spy=sinon.spy(appController.contactsPaginatedCollection, 'fetch');
-            appController.fetchPageContacts();
+            appController.fetchPageContacts(pageModel);
             assert.isTrue(spy.called);
 
             after(function() {
