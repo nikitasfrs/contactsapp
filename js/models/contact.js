@@ -28,3 +28,7 @@ var Contact = Backbone.Model.extend({
 module.exports = function createModule(opt) {
     return new Contact(opt);
 }
+
+module.exports.getClass = function () {
+    return Contact;
+}

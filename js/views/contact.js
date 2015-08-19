@@ -77,3 +77,6 @@ module.exports = function createModule(opt){
     return new ContactView(opt);
 }
 
+module.exports.getClass = function () {
+    return ContactView;
+}

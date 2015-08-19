@@ -40,4 +40,7 @@ module.exports = function createModule(opt){
     return new ContactsAppView(opt);
 }
 
+module.exports.getClass = function () {
+    return ContactsAppView;
+}
    

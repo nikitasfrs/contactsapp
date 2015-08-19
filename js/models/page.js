@@ -21,3 +21,7 @@ var PageModel = Backbone.Model.extend({
 module.exports = function createModule(opt) {
     return new PageModel(opt);
 }
+
+module.exports.getClass = function () {
+    return PageModel;
+}

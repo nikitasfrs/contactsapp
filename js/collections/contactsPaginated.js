@@ -54,3 +54,6 @@ var ContactsPaginatedCollection = Backbone.Collection.extend({
 module.exports = function createModule(opt) {
     return new ContactsPaginatedCollection(opt);
 }
+module.exports.getClass = function () {
+    return ContactsPaginatedCollection;
+}

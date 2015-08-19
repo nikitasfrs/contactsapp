@@ -20,4 +20,8 @@ var WaitView = Backbone.View.extend({
 module.exports = function createModule(opt){
     return new WaitView(opt);
 }
+
+module.exports.getClass = function () {
+    return WaitView;
+}
         
