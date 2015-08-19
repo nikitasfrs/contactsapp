@@ -13,7 +13,7 @@ Contact manager SPA implementation built with Backbone.js, bootstrap-sass.
 ```
 npm install -g grunt browserify json-server 
 npm install
-grunt browserify
+npm run bundle 
 ```
 
 To generate and serve mock API just type:
