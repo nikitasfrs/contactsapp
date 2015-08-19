@@ -45,7 +45,7 @@ module.exports = function(grunt) {
         browserify: {
             dist: {
                 src: ['./js/*.js'],
-                dest: 'dist-js/main-build.js',
+                dest: './bundle.js',
             },
             options: {
                 transform: ['brfs']
