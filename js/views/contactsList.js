@@ -12,7 +12,6 @@ var ContactsListView = Backbone.View.extend({
     template: _.template(contactsListContainerTmp),
 
     initialize: function(options) {
-
         this.waitView = new WaitView();
         this.views = [];
 
@@ -67,7 +66,6 @@ var ContactsListView = Backbone.View.extend({
         });
 
         this.views.push(view);
-
         this.$('#contacts-list').prepend(view.render().el);
     },
 
@@ -85,5 +83,9 @@ var ContactsListView = Backbone.View.extend({
 
 module.exports = function createModule(opt) {
     return new ContactsListView(opt);
+}
+
+module.exports.getClass = function () { 
+    return ContactsListView;
 }
 
