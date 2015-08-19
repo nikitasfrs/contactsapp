@@ -47,7 +47,7 @@ var ContactCreateFormView = Backbone.View.extend({
     },
 
     clear: function(e) {
-        e.preventDefault();
+        if (e) e.preventDefault();
         this.render();
     }
 
