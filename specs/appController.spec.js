@@ -21,15 +21,6 @@ describe('AppController', function() {
             proto = AppController.prototype;
             stub = sinon.stub(proto, 'fetchPageContacts');
 
-            /*var init = AppController.prototype.initialize;
-            AppController.prototype.initialize = function(options) {
-                
-                // spy should be set here before event
-                // binding to get proper function
-                stub = sinon.stub(this,'fetchPageContacts');
-                init.apply(this, arguments);
-            }*/
-
             appController = new AppController ({
                 eventbus: vent
             })
