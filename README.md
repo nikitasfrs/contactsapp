@@ -17,7 +17,7 @@ npm install
 npm run bundle 
 ```
 
-To generate and serve mock API just type:
+Run server:
 ```
 npm run server
 ```
