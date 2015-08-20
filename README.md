@@ -1,12 +1,13 @@
 # Contact manager app
 
-Contact manager SPA implementation built with Backbone.js, bootstrap-sass.
+Contact manager Single Page App built with BackboneJS.
 
 ### Features
 - Create, Read, Update, Delete contacts.
 - Load and error state handling.
 - Pagination support.
-- Decoupled components (CommonJS modules) communicating with a central event-bus.
+- Decoupled components (CommonJS modules)
+  communicating via central event-bus.
 - Tested with mocha/sinon/chai.
 
 ### Installation
