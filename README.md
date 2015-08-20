@@ -18,6 +18,6 @@ npm run bundle
 
 To generate and serve mock API just type:
 ```
-json-server generate.js
+npm run server
 ```
 

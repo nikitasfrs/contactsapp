@@ -25,7 +25,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "bundle": "browserify -t brfs js/main.js > bundle.js"
+    "bundle": "browserify -t brfs js/main.js > bundle.js",
+    "server": "json-server generate.js"
   },
   "author": "Nikitas Frantzeskakis"
 }
