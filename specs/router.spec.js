@@ -16,7 +16,7 @@ describe('Router', function () {
                 eventbus:vent 
             });
         })
-        it('changePage should be called with a pageModel on \page:change\' event', function () {
+        it('changePage should be called with a pageModel on \'page:change\' event', function () {
             vent.trigger('page:change', pageModel);
             assert.isTrue(spy.called);
         })
