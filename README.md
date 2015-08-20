@@ -6,8 +6,8 @@ Contact manager SPA implementation built with Backbone.js, bootstrap-sass.
 - Create, Read, Update, Delete contacts.
 - Load and error state handling.
 - Pagination support.
-- Decoupled components using a central event-bus.
-- Written in CommonJS modules.
+- Decoupled components (CommonJS modules) communicating with a central event-bus.
+- Tested with mocha/sinon/chai.
 
 ### Installation
 ```
