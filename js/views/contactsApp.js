@@ -27,7 +27,7 @@ var ContactsAppView = Backbone.View.extend({
            this.$('#contacts-container')).wait();
 
        this.pageControlView.setElement(
-            this.$('#contacts-pages')).render(); 
+            this.$('#contacts-pages')); 
 
         this.contactCreateFormView.setElement(
             this.$('.create-area')).render();
