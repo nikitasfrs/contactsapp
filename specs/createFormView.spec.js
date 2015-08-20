@@ -18,8 +18,11 @@ describe('ContactCreateFormView', function () {
    })
 
    describe('#createNew', function () {
+       var trigger;
+       before(function () {
+           trigger = sinon.spy(vent, 'trigger');
+       })
        it('should trigger \'contact:create\' passing a contact object', function () {
-           var trigger = sinon.spy(vent, 'trigger');
            var obj;
            
            formView.createNew();
@@ -31,10 +34,9 @@ describe('ContactCreateFormView', function () {
            assert.isTrue(obj.lastName === 'foo')
            assert.isTrue(obj.phone === 'foo')
            assert.isTrue(obj.email === 'foo')
-
-           after( function () {
-               vent.trigger.restore();
-           })
+       })
+       after( function () {
+           vent.trigger.restore();
        })
    })
 
