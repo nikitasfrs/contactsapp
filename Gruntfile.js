@@ -32,12 +32,12 @@ module.exports = function(grunt) {
             },
 
             js: {
-                files: ['js/**'],
+                files: ['./js/**/*.js'],
                 tasks: ['browserify', 'mochaTest']
             },
 
             mochaTest: {
-                files: ['specs/**'],
+                files: ['./specs/**/*.spec.js'],
                 tasks: ['mochaTest']
             }
         },
