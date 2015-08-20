@@ -46,9 +46,9 @@ describe('ContactCreateFormView', function () {
 
            formView.clear();
            assert.isTrue(render.called);
-           after( function () {
-               formView.render.restore();
-           })
+       })
+       after( function () {
+           formView.render.restore();
        })
    })
    describe('#render', function () {
@@ -56,10 +56,11 @@ describe('ContactCreateFormView', function () {
            var html = sinon.spy(formView.$el, 'html');
            formView.render();
            assert.isTrue(html.calledWith(formView.template));
-           after( function () {
-               formView.$el.html.restore();
-           })
        })
+       after( function () {
+           formView.$el.html.restore();
+       })
+
        it('should store form selectors', function () {
            formView.render();
 
