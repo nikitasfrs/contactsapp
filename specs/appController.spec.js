@@ -43,10 +43,9 @@ describe('AppController', function() {
             var spy=sinon.spy(appController.contactsPaginatedCollection, 'fetch');
             appController.fetchPageContacts(pageModel);
             assert.isTrue(spy.called);
-
-            after(function() {
-                appController.contactsPaginatedCollection.fetch.restore();
-            })
+        })
+        after(function() {
+            appController.contactsPaginatedCollection.fetch.restore();
         })
     })
 
@@ -61,11 +60,6 @@ describe('AppController', function() {
            sinon.stub($,'ajax').returns($.Deferred().reject());
            appController.setupPageAction(0);
            assert.isTrue(spy.called);
-           
-           after(function() {
-               appController.contactsListView.onError.restore();
-           })
-
        })
 
        it('should fetch page contacts on success', function() {
@@ -74,13 +68,14 @@ describe('AppController', function() {
          sinon.stub($, 'ajax').returns($.Deferred().resolve());
          appController.setupPageAction(0);
          assert.isTrue(spy.called);
-         after(function() {
-             appController.fetchPageContacts.restore();
-         })
        })
 
        afterEach(function() {
            $.ajax.restore();
+       })
+       after(function () {
+           appController.contactsListView.onError.restore();
+           appController.fetchPageContacts.restore();
        })
        
      })

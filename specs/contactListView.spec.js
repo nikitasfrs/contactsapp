@@ -28,7 +28,6 @@ describe('ContactListView', function () {
         model = require('../js/models/contact')({
             firstName: 'foo'
         });
-
         contactCollection.add(model);
     })
     
@@ -70,10 +69,10 @@ describe('ContactListView', function () {
             assert.isTrue(reqSpy.called)
             assert.isTrue(waitSpy.called);
 
-            after(function () {
-                //contactCollection.pop();
-                contactListView.wait.restore();
-            })
+        })
+        after(function () {
+            //contactCollection.pop();
+            contactListView.wait.restore();
         })
     })
 
@@ -107,10 +106,11 @@ describe('ContactListView', function () {
             assert.isTrue(spy.called);
             assert.isTrue(jq.calledWith('#contacts-list'));
 
-            after ( function () {
-                contactListView.$.restore
-            })
         })
+        after ( function () {
+            contactListView.$.restore
+        })
+
     })
     describe('#addAll', function () {
         var sort, each;
@@ -157,5 +157,4 @@ describe('ContactListView', function () {
         contactListView.render.restore();
         contactListView.trigger.restore();
     })
-
 })
