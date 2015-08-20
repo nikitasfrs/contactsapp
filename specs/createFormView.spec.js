@@ -1,10 +1,8 @@
 describe('ContactCreateFormView', function () {
    var formView
-     , FormView
-     , vent;
+     , FormView;
 
    before( function () {
-       vent = _.extend({}, Backbone.Events);
        FormView = require('../js/views/contactCreateForm').getClass();
        formView = new FormView({
            eventbus: vent
