@@ -8,7 +8,7 @@ describe('Router', function () {
             var Router = require('../js/routers/router').getClass();
             var init = Router.prototype.initialize;
             Router.prototype.initialize = function(options) {
-                spy = sinon.spy(this, 'changePage'); 
+                spy = sinon.spy(this, '_changePage'); 
                 init.apply(this, arguments); 
             }
             router = new Router({ eventbus: vent })
@@ -21,7 +21,7 @@ describe('Router', function () {
             assert.isTrue(spy.called);
         })
         after(function () {
-            router.changePage.restore();
+            router._changePage.restore();
         })
     })
 
