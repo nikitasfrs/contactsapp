@@ -12,7 +12,7 @@ var appRouter = require('./routers/router')({
     appController: appController,
     eventbus: vent
 });
-    
+     
 'use strict';
  
 Backbone.$ = $;

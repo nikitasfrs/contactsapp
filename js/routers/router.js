@@ -12,7 +12,8 @@ var AppRouter = Backbone.Router.extend({
     },
 
     routes: {
-        "page/:page":"pageRoute"
+        "page/:page":"pageRoute",
+        "*path": "pageRoute" // Default 
     },
 
     pageRoute:function(pageNum) {
