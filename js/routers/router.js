@@ -12,13 +12,7 @@ var AppRouter = Backbone.Router.extend({
     },
 
     routes: {
-        "page/:page":"pageRoute",
-        "*path": "pageRoute"
-    },
-
-    pageRoute:function(pageNum) {
-        return this.appController.setupPageAction(pageNum);
-        
+        "page/:page":"pageRoute"
     },
 
     changePage: function(pageModel) {
