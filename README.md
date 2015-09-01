@@ -17,7 +17,7 @@ npm install
 npm run bundle 
 ```
 
-Run server:
+Run mock server:
 ```
 npm run server
 ```
