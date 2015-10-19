@@ -12,20 +12,22 @@ Contact manager Single Page App built with BackboneJS.
 
 ### Installation
 
-Install dependencies:
-```
-sudo npm install -g grunt browserify json-server
-npm install
-npm run bundle 
-```
-Run mock server:
-```
-npm run server
-```
-Open your browser and visit:
-http://127.0.0.1/contactsapp
+1. Install dependencies:
+    ```
+    sudo npm install -g grunt browserify json-server
+    npm install
+    npm run bundle 
+    ```
+
+2. Run mock server with some fake data:
+    ```
+    npm run server
+    ```
+
+3. Open your browser and visit: http://127.0.0.1/contactsapp
 
 ### Run test suite
+To run tests just type: 
 ```
 npm run test
 ```
