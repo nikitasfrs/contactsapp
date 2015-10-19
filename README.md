@@ -10,7 +10,7 @@ Contact manager Single Page App built with BackboneJS.
   communicating via central event-bus.
 - Tested with mocha/sinon/chai.
 
-### Installation
+### Install
 
 1. Install dependencies:
     ```
@@ -26,8 +26,8 @@ Contact manager Single Page App built with BackboneJS.
 
 3. Open your browser and visit: http://127.0.0.1/contactsapp
 
-### Run test suite
-To run tests just type: 
+### Test
+To run test suits just type: 
 ```
 npm run test
 ```
