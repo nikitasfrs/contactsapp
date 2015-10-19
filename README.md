@@ -18,7 +18,7 @@ Contact manager Single Page App built with BackboneJS.
     npm install
     ```
 
-2. Build browserified bundle:
+2. Build javascript bundle:
     ```
     npm run bundle
     ```
@@ -28,7 +28,7 @@ Contact manager Single Page App built with BackboneJS.
     npm run server
     ```
 
-4. Open your browser and visit: http://127.0.0.1/contactsapp
+4. Open your browser and visit http://127.0.0.1/contactsapp
 
 ### Test
 To run test suits just type: 
