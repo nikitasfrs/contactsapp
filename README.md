@@ -22,3 +22,8 @@ Run mock server:
 npm run server
 ```
 
+### Run test suite
+```
+npm run test
+```
+
