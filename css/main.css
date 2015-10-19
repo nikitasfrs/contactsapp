@@ -1519,6 +1519,10 @@ aside #clearCreateForm {
   left: 15%;
 }
 
+#contacts-container {
+  min-height: 800px;
+}
+
 #contacts-list {
   margin-left: -15px;
   margin-right: -15px;
